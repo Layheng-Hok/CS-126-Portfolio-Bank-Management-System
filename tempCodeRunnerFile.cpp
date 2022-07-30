@@ -725,7 +725,7 @@ void Customer_System()
                 "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
                 "\t\t\t\t  =======================================================================================\n"
                 "\n"
-                "\t\t\t\t                            : :  A D M I N _ S Y S T E M   : :                           \n"
+                "\t\t\t\t                          : :  C U S T O M E R _ S Y S T E M   : :                       \n"
                 "\n"
                 "\n\t\t\t\t  Here Are Your Privileges:\n\n"
                 "\t\t\t\t     (1)  See Account Details\n\n"
