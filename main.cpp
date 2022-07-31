@@ -92,7 +92,6 @@ int main()
                 break;
             }
         }
-
         else
         {
             cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
@@ -267,6 +266,13 @@ void Admin_Login_System()
                     break;
                 }
             }
+            else
+            {
+                cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                system("pause");
+                system("cls");
+            }
+
         } while (true);
     }
 }
@@ -421,6 +427,10 @@ void Admin_System()
 
                 break;
 
+            case '5':
+
+                break;
+
             case 'B':
             case 'b':
                 main();
@@ -433,7 +443,6 @@ void Admin_System()
                 break;
             }
         }
-
         else
         {
             cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
@@ -462,7 +471,7 @@ void Customer_Login_Menu()
                 "\t\t\t\t                            : :  L O G I N _ S Y S T E M  : :                            \n"
                 "\n"
                 "\t\t\t\t     (1)   Log In As A Customer\n\n"
-                "\t\t\t\t     (2)   Register As Customer\n\n"
+                "\t\t\t\t     (2)   Register As A Customer\n\n"
                 "\t\t\t\t     (B)   Back\n"
                 "\n\t\t\t\t  Your Selection: ";
 
@@ -606,6 +615,13 @@ void Customer_Login_System()
                     break;
                 }
             }
+            else
+            {
+                cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                system("pause");
+                system("cls");
+            }
+
         } while (true);
     }
 }
@@ -671,7 +687,7 @@ void Customer_Register_System()
     {
         ostream_iterator<string> out_iterator1(CregInfo, " ");
         copy(CregUSN.begin(), CregUSN.end(), out_iterator1);
-        ostream_iterator<string> out_iterator2(CregInfo);
+        ostream_iterator<string> out_iterator2(CregInfo, "\n");
         copy(CregPW.begin(), CregPW.end(), out_iterator2);
     }
 
@@ -754,10 +770,6 @@ void Customer_System()
 
                 break;
 
-            case '4':
-
-                break;
-
             case 'B':
             case 'b':
                 main();
@@ -770,7 +782,6 @@ void Customer_System()
                 break;
             }
         }
-
         else
         {
             cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
