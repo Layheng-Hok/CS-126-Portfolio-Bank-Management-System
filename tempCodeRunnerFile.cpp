@@ -21,6 +21,20 @@
 
 using namespace std;
 
+class a{
+    protected : 
+        string name;
+        string dob;
+        string gender;
+        string account_number, phone_number;
+        string occupation;
+        int i;
+    public :
+        void Add_Account();
+        void Delete_Account();
+        void Edit_Account();
+}obj;
+
 // function declaration
 void Admin_Login_Menu();                            // function to display options for an admin to log in or register
 void Admin_Login_System();                          // function for an admin to log in if they have already had an account
@@ -412,17 +426,15 @@ void Admin_System()
             switch (choice)
             {
             case '1':
-
+                obj.Add_Account();
                 break;
 
             case '2':
-
+                obj.Edit_Account();
                 break;
-
             case '3':
-
+                obj.Delete_Account();
                 break;
-
             case '4':
 
                 break;
@@ -453,6 +465,148 @@ void Admin_System()
     } while (true);
 }
 
+// function to add account
+void a::Add_Account(){
+    again:
+    system("cls");
+    cout << "\n\nEnter The Following Information" << endl;
+    cout << "\n\tName: "; getline(cin,name);
+    for (i=0; i<name.length(); i++){
+        if (isspace(name[i])){
+            break;
+        }
+        if (!isalnum(name[i])){
+            system("cls");
+            cout << "\nName must not contain special character\n";
+            system("pause");
+            goto again;
+        }
+    }
+    cout << "\n\tDate of birth(DD/MM/YY): "; getline(cin,dob);
+    cout << "\n\tGender: "; getline(cin,gender);
+    cout << "\n\tAccount Number: "; getline(cin,account_number);
+    cout << "\n\tPhone Number: "; getline(cin,phone_number);
+    cout << "\n\tOccupation: "; getline(cin,occupation);
+
+    vector<string> Name;
+    Name.push_back(name);
+
+    vector<string> DOB;
+    DOB.push_back(dob);
+
+    vector<string> Gender;
+    Gender.push_back(gender);
+
+    vector<string> Acocunt_Number;
+    Acocunt_Number.push_back(account_number);
+
+    vector<string> Phone_Number;
+    Phone_Number.push_back(phone_number);
+
+    vector<string> Occupation;
+    Occupation.push_back(occupation);
+
+    ofstream Bank_Info("Bank_Account.txt", ios::app);
+
+    if (Bank_Info.is_open())
+    {
+        ostream_iterator<string> Acc_Name(Bank_Info,"\n");
+        copy(Name.begin(), Name.end(), Acc_Name);
+
+        ostream_iterator<string> Acc_DOB(Bank_Info,"\n");
+        copy(DOB.begin(), DOB.end(), Acc_DOB);
+
+        ostream_iterator<string> Acc_Gender(Bank_Info,"\n");
+        copy(Gender.begin(), Gender.end(), Acc_Gender);
+
+        ostream_iterator<string> Acc_Num(Bank_Info,"\n");
+        copy(Acocunt_Number.begin(), Acocunt_Number.end(), Acc_Num);
+
+        ostream_iterator<string> Acc_pNum(Bank_Info,"\n");
+        copy(Phone_Number.begin(), Phone_Number.end(), Acc_pNum);
+
+        ostream_iterator<string> Acc_Occuation(Bank_Info,"\n");
+        copy(Occupation.begin(), Occupation.end(), Acc_Occuation);
+    }
+
+    Bank_Info.close();
+    cout << "\n";
+    system("pause");
+    system("cls");
+}
+
+void a::Edit_Account(){
+
+}
+
+void a::Delete_Account(){
+    string aName,aDOB, aGender, aNumber, aPhone, aOccupation;
+    vector<string> a,b,c,d,e,f,g;
+    string find;
+    bool flag;
+
+    ofstream tempFile("temp.txt", ios::app);
+    ifstream Bank_Info1("Bank_Account.txt");
+    int size;
+
+    cout << "Enter Name to delete account: ";cin >> find;
+
+    while (!Bank_Info1.eof())
+    {
+        getline(Bank_Info1, aName);
+        getline(Bank_Info1, aDOB);
+        getline(Bank_Info1, aGender);
+        getline(Bank_Info1, aNumber);
+        getline(Bank_Info1, aPhone);
+        getline(Bank_Info1, aOccupation);
+
+        a.push_back(aName);
+        b.push_back(aDOB);
+        c.push_back(aGender);
+        d.push_back(aNumber);
+        e.push_back(aPhone);
+        f.push_back(aOccupation);
+
+        if (aName == find)
+        {
+            a.pop_back();
+            b.pop_back();
+            c.pop_back();
+            d.pop_back();
+            e.pop_back();
+            f.pop_back();
+        }
+        ostream_iterator<string> aBank(tempFile);
+        copy(a.begin(), a.end(), aBank);
+        ostream_iterator<string> bBank(tempFile);
+        copy(b.begin(), b.end(), bBank);
+        ostream_iterator<string> cBank(tempFile);
+        copy(c.begin(), c.end(), cBank);
+        ostream_iterator<string> dBank(tempFile);
+        copy(d.begin(), d.end(), dBank);
+        ostream_iterator<string> eBank(tempFile);
+        copy(e.begin(), e.end(), eBank);
+        ostream_iterator<string> fBank(tempFile);
+        copy(f.begin(), f.end(), fBank);
+        a.pop_back();
+        b.pop_back();
+        c.pop_back();
+        d.pop_back();
+        e.pop_back();
+        f.pop_back();
+    }
+    tempFile.close();
+    Bank_Info1.close();
+    remove("Bank_Account.txt");
+    rename("temp.txt", "Bank_Account.txt");
+    if (flag){
+        cout << "\nData Deleted Successfully\n\n";
+    }
+    else {
+        cout << "\nData Not Fount\n\n";
+
+    }
+}
 // ***************************************************************
 //                       Customer Functions
 // ***************************************************************
