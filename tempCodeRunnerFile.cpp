@@ -21,21 +21,7 @@
 
 using namespace std;
 
-class a{
-    protected : 
-        string name;
-        string dob;
-        string gender;
-        string account_number, phone_number;
-        string occupation;
-        int i;
-    public :
-        void Add_Account();
-        void Delete_Account();
-        void Edit_Account();
-}obj;
-
-// function declaration
+// login system by implementing STL
 void Admin_Login_Menu();                            // function to display options for an admin to log in or register
 void Admin_Login_System();                          // function for an admin to log in if they have already had an account
 void Admin_Register_System();                       // function for an admin to create a new account
@@ -45,7 +31,37 @@ void Customer_Login_Menu();                         // function display options 
 void Customer_Login_System();                       // function for a customer to log in if they have already had an account
 void Customer_Register_System();                    // function for a customer to create a new account
 bool Customer_Username_Validation(string inputUSN); // function to check if the new customer's username is repeated
-void Customer_System();                             // function to display all the privileges that a customer has on the program
+void Customer_System();
+
+//
+class a
+{
+protected:
+    string name;
+    string dob;
+    string gender;
+    string account_number, phone_number;
+    string occupation;
+    int i;
+    int count=0;
+    int Num_Acc=0;
+
+public:
+    void Add_Account();
+    string CheckForDelete();
+    void Delete_Account();
+    void Edit_Account();
+}obj;
+
+// function declaration
+void Admin_Login_Menu();                            // function to display options for an admin to log in or register
+void Admin_Login_System();                          // function for an admin to log in if they have already had an account
+void Admin_Register_System();                       // function for an admin to create a new account
+bool Admin_Username_Validation(string inputUSN);    // function to check if the new admin's username is repeated
+void Customer_Login_Menu();                         // function display options for a customer to log in or register
+void Customer_Login_System();                       // function for a customer to log in if they have already had an account
+void Customer_Register_System();                    // function for a customer to create a new account
+bool Customer_Username_Validation(string inputUSN); // function to check if the new customer's username is repeated
 
 // global variables
 char choice;       // for accepting a user's selection
@@ -466,147 +482,160 @@ void Admin_System()
 }
 
 // function to add account
-void a::Add_Account(){
-    again:
+void a::Add_Account()
+{
     system("cls");
     cout << "\n\nEnter The Following Information" << endl;
-    cout << "\n\tName: "; getline(cin,name);
-    for (i=0; i<name.length(); i++){
-        if (isspace(name[i])){
-            break;
+    cout << "\n\tName: ";
+    getline(cin, name);
+    for (i = 0; i < name.length(); i++)
+    {
+        if (isspace(name[i]))
+        {
+            continue;
         }
-        if (!isalnum(name[i])){
+        if (!isalpha(name[i]))
+        {
             system("cls");
             cout << "\nName must not contain special character\n";
             system("pause");
-            goto again;
         }
     }
-    cout << "\n\tDate of birth(DD/MM/YY): "; getline(cin,dob);
-    cout << "\n\tGender: "; getline(cin,gender);
-    cout << "\n\tAccount Number: "; getline(cin,account_number);
-    cout << "\n\tPhone Number: "; getline(cin,phone_number);
-    cout << "\n\tOccupation: "; getline(cin,occupation);
-
-    vector<string> Name;
-    Name.push_back(name);
-
-    vector<string> DOB;
-    DOB.push_back(dob);
-
-    vector<string> Gender;
-    Gender.push_back(gender);
-
-    vector<string> Acocunt_Number;
-    Acocunt_Number.push_back(account_number);
-
-    vector<string> Phone_Number;
-    Phone_Number.push_back(phone_number);
-
-    vector<string> Occupation;
-    Occupation.push_back(occupation);
+    cout << "\n\tDate of birth(DD/MM/YY): ";
+    getline(cin, dob);
+    cout << "\n\tGender: ";
+    getline(cin, gender);
+    cout << "\n\tAccount Number: ";
+    getline(cin, account_number);
+    cout << "\n\tPhone Number: ";
+    getline(cin, phone_number);
+    cout << "\n\tOccupation: ";
+    getline(cin, occupation);
 
     ofstream Bank_Info("Bank_Account.txt", ios::app);
-
-    if (Bank_Info.is_open())
-    {
-        ostream_iterator<string> Acc_Name(Bank_Info,"\n");
-        copy(Name.begin(), Name.end(), Acc_Name);
-
-        ostream_iterator<string> Acc_DOB(Bank_Info,"\n");
-        copy(DOB.begin(), DOB.end(), Acc_DOB);
-
-        ostream_iterator<string> Acc_Gender(Bank_Info,"\n");
-        copy(Gender.begin(), Gender.end(), Acc_Gender);
-
-        ostream_iterator<string> Acc_Num(Bank_Info,"\n");
-        copy(Acocunt_Number.begin(), Acocunt_Number.end(), Acc_Num);
-
-        ostream_iterator<string> Acc_pNum(Bank_Info,"\n");
-        copy(Phone_Number.begin(), Phone_Number.end(), Acc_pNum);
-
-        ostream_iterator<string> Acc_Occuation(Bank_Info,"\n");
-        copy(Occupation.begin(), Occupation.end(), Acc_Occuation);
-    }
-
+    Bank_Info << name << endl;
+    Bank_Info << dob << endl;
+    Bank_Info << gender << endl;
+    Bank_Info << account_number << endl;
+    Bank_Info << phone_number << endl;
+    Bank_Info << occupation << endl;
     Bank_Info.close();
     cout << "\n";
     system("pause");
     system("cls");
-}
-
-void a::Edit_Account(){
 
 }
 
-void a::Delete_Account(){
-    string aName,aDOB, aGender, aNumber, aPhone, aOccupation;
-    vector<string> a,b,c,d,e,f,g;
+void a::Edit_Account()
+{
+}
+
+string a::CheckForDelete(){
+    string str;
     string find;
-    bool flag;
+    bool notFound = true;
+
+    ifstream Bank_Info("Bank_Account.txt");
+    while(!Bank_Info.eof()){
+        getline(Bank_Info,str);
+        count++;
+    }
+    Bank_Info.close();
+    Num_Acc = count/6;
 
     ofstream tempFile("temp.txt", ios::app);
     ifstream Bank_Info1("Bank_Account.txt");
-    int size;
 
-    cout << "Enter Name to delete account: ";cin >> find;
+    cout << "Enter Account Number to delete account: ";
+    getline(cin,find);
 
-    while (!Bank_Info1.eof())
+    for (int j = 0; (j < Num_Acc) || (!Bank_Info1.eof()); j++);
     {
-        getline(Bank_Info1, aName);
-        getline(Bank_Info1, aDOB);
-        getline(Bank_Info1, aGender);
-        getline(Bank_Info1, aNumber);
-        getline(Bank_Info1, aPhone);
-        getline(Bank_Info1, aOccupation);
+        getline(Bank_Info1, name);
+        getline(Bank_Info1, dob);
+        getline(Bank_Info1, gender);
+        getline(Bank_Info1, account_number);
+        getline(Bank_Info1, phone_number);
+        getline(Bank_Info1, occupation);
 
-        a.push_back(aName);
-        b.push_back(aDOB);
-        c.push_back(aGender);
-        d.push_back(aNumber);
-        e.push_back(aPhone);
-        f.push_back(aOccupation);
-
-        if (aName == find)
+        if (account_number == find)
         {
-            a.pop_back();
-            b.pop_back();
-            c.pop_back();
-            d.pop_back();
-            e.pop_back();
-            f.pop_back();
+            cout << name << endl;
+            cout << dob << endl;
+            cout << gender << endl;
+            cout << account_number << endl;
+            cout << phone_number << endl;
+            cout << occupation << endl;
+            notFound = false;
+            return find;
         }
-        ostream_iterator<string> aBank(tempFile);
-        copy(a.begin(), a.end(), aBank);
-        ostream_iterator<string> bBank(tempFile);
-        copy(b.begin(), b.end(), bBank);
-        ostream_iterator<string> cBank(tempFile);
-        copy(c.begin(), c.end(), cBank);
-        ostream_iterator<string> dBank(tempFile);
-        copy(d.begin(), d.end(), dBank);
-        ostream_iterator<string> eBank(tempFile);
-        copy(e.begin(), e.end(), eBank);
-        ostream_iterator<string> fBank(tempFile);
-        copy(f.begin(), f.end(), fBank);
-        a.pop_back();
-        b.pop_back();
-        c.pop_back();
-        d.pop_back();
-        e.pop_back();
-        f.pop_back();
+    }
+    if (notFound == false)
+    {
+        cout << "\nData Not Fount\n\n";
     }
     tempFile.close();
     Bank_Info1.close();
     remove("Bank_Account.txt");
     rename("temp.txt", "Bank_Account.txt");
-    if (flag){
+    system("pause");
+    system("cls");
+    return 0;
+}
+
+void a::Delete_Account()
+{
+    string find = CheckForDelete();
+    cout << "\nDo You Want To Delete This Record?\n";
+    cout << "Press 'Y' To Confirm Or 'N' To Cancel: ";
+    char choice;
+    cin >> choice;
+
+    if (choice == 'y' || choice == 'Y')
+    {
+        ofstream tempFile("temp.txt", ios::app);
+        ifstream Bank_Info1("Bank_Account.txt");
+
+        for (int j = 0; (j < Num_Acc) || (!Bank_Info1.eof()); j++)
+        {
+            getline(Bank_Info1, name);
+            getline(Bank_Info1, dob);
+            getline(Bank_Info1, gender);
+            getline(Bank_Info1, account_number);
+            getline(Bank_Info1, phone_number);
+            getline(Bank_Info1, occupation);
+
+            if (account_number != find)
+            {
+                tempFile << name << endl;
+                tempFile << dob << endl;
+                tempFile << gender << endl;
+                tempFile << account_number << endl;
+                tempFile << phone_number << endl;
+                tempFile << occupation << endl;
+            }
+        }
+        tempFile.close();
+        Bank_Info1.close();
+        remove("Bank_Account.txt");
+        rename("temp.txt", "Bank_Account.txt");
         cout << "\nData Deleted Successfully\n\n";
     }
-    else {
-        cout << "\nData Not Fount\n\n";
-
+    else if (choice == 'n' || choice == 'N')
+    {
+        cout << "\nRecord Not Deleted\n\n";
     }
+
+    else
+    {
+        cout << "\nSorry, invalid input.\n\n";
+    }
+    cin.clear();
+    cin.ignore(100, '\n');
+    system("pause");
+    system("cls");
 }
+
 // ***************************************************************
 //                       Customer Functions
 // ***************************************************************
@@ -626,6 +655,7 @@ void Customer_Login_Menu()
                 "\n"
                 "\t\t\t\t     (1)   Log In As A Customer\n\n"
                 "\t\t\t\t     (2)   Register As A Customer\n\n"
+                "\t\t\t\t     (3)   Delete Your Registered Username & Password\n\n"
                 "\t\t\t\t     (B)   Back\n"
                 "\n\t\t\t\t  Your Selection: ";
 
