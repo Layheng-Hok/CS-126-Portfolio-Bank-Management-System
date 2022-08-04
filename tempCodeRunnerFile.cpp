@@ -46,8 +46,7 @@ protected:
     string gender;
     string account_number, phone_number;
     string occupation;
-    int i;
-    int count = 0;
+    int i = 0;
     int Num_Acc = 0;
     int count = 0;
     int num;
@@ -848,7 +847,7 @@ string a::CheckForDelete()
 
     ofstream tempFile("temp.txt", ios::app);
     ifstream Bank_Info1("Bank_Account.txt", ios::in);
-
+    
     cout << "Enter Account Number to delete account: ";
     getline(cin, find);
 
@@ -888,6 +887,7 @@ string a::CheckForDelete()
 
 void a::Delete_Account()
 {
+    bool found = false;
     string find = CheckForDelete();
     cout << "\nDo You Want To Delete This Record?\n";
     cout << "Press 'Y' To Confirm Or 'N' To Cancel: ";
@@ -917,12 +917,18 @@ void a::Delete_Account()
                 tempFile << phone_number << endl;
                 tempFile << occupation << endl;
             }
+            if (account_number == find){
+                found = true;
+            }
         }
         tempFile.close();
         Bank_Info1.close();
         remove("Bank_Account.txt");
         rename("temp.txt", "Bank_Account.txt");
         cout << "\nData Deleted Successfully\n\n";
+        if (found){
+            num--;
+        }
     }
     else if (choice == 'n' || choice == 'N')
     {
@@ -935,6 +941,7 @@ void a::Delete_Account()
     }
     system("pause");
     system("cls");
+    Admin_Login_Menu();
 }
 
 // ***************************************************************
