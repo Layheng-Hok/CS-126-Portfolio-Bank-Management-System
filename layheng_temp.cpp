@@ -49,15 +49,17 @@ protected:
     int i;
     int count = 0;
     int Num_Acc = 0;
-    int count = 0;
     int num;
 
 public:
+    // admin functions
     void Add_Account();
     string CheckForDelete();
     void Delete_Account();
     void Edit_Account();
-    void Count();
+
+    // customer functions
+    void View_Details(); // function for a customer to check their own account details
 } obj;
 
 // global variables
@@ -643,6 +645,7 @@ reverify:
         if (verification)
         {
             cout << "\t\t\t\t  =======================================================================================\n";
+            // return back to the delete function
         }
         else
         {
@@ -699,10 +702,46 @@ reverify:
         system("cls");
         cout << "\nError Message: Your Reentered Username Is Not Correct.";
         cout << "\nMake Sure Your Reentered Username Is The Same As The Confirmed Username You Want To Delete.";
-        cout << "\nPlease Try Again.\n\n";
-        system("pause");
-        system("cls");
-        Admin_Verification(targetedInfo);
+        cout << "\nPlease Try Again.\n";
+
+        do
+        {
+            cout << "\nEnter 'Y' To Reverify, 'N' To Go Back To Login Menu.";
+            cout << "\nYour Selection: ";
+            getline(cin, validation);
+            system("cls");
+
+            if (validation.length() == 1)
+            {
+                choice = validation[0];
+
+                switch (choice)
+                {
+                case 'Y':
+                case 'y':
+                    goto reverify;
+                    break;
+
+                case 'N':
+                case 'n':
+                    Admin_Login_Menu();
+                    break;
+
+                default:
+                    cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+            }
+            else
+            {
+                cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                system("pause");
+                system("cls");
+            }
+
+        } while (true);
     }
 }
 
@@ -773,18 +812,7 @@ void Admin_System()
 
     } while (true);
 }
-// function to count number of account in Bank_Account.txt
-void a::Count()
-{
-    string line;
-    ifstream Number_Of_Account("Bank_Account.txt", ios::in);
-    while (!Number_Of_Account.eof())
-    {
-        getline(Number_Of_Account, line);
-        count++;
-    }
-    num = count / 6;
-}
+
 // function to add account
 void a::Add_Account()
 {
@@ -834,7 +862,6 @@ void a::Edit_Account()
 
 string a::CheckForDelete()
 {
-    Count();
     string str;
     string find;
     bool notFound = true;
@@ -852,7 +879,7 @@ string a::CheckForDelete()
     cout << "Enter Account Number to delete account: ";
     getline(cin, find);
 
-    for (int j = 0; j < num; j++)
+    for (int j = 0; (j < Num_Acc) || (!Bank_Info1.eof()); j++)
     {
         getline(Bank_Info1, name);
         getline(Bank_Info1, dob);
@@ -899,7 +926,7 @@ void a::Delete_Account()
         ofstream tempFile("temp.txt", ios::app);
         ifstream Bank_Info1("Bank_Account.txt", ios::in);
 
-        for (int j = 0; j < num; j++)
+        for (int j = 0; (j < Num_Acc) || (!Bank_Info1.eof()); j++)
         {
             getline(Bank_Info1, name);
             getline(Bank_Info1, dob);
@@ -1305,13 +1332,13 @@ void Customer_Delete()
                     CustomerInfo.close();
                     tempFile.close();
 
-                    remove("Admin_Account.txt");
-                    rename("temp.txt", "Admin_Account.txt");
+                    remove("Customer_Account.txt");
+                    rename("temp.txt", "Customer_Account.txt");
 
                     cout << endl;
                     cout << "\t\t\t\t     Account Is Deleted Successfully.\n\n";
                     system("pause");
-                    Admin_Login_Menu();
+                    Customer_Login_Menu();
                 }
 
                 case 'N':
@@ -1319,7 +1346,7 @@ void Customer_Delete()
                     cout << endl;
                     cout << "\t\t\t\t     Account Is Not Deleted.\n\n";
                     system("pause");
-                    Admin_Login_Menu();
+                    Customer_Login_Menu();
                     break;
 
                 default:
@@ -1338,7 +1365,7 @@ void Customer_Delete()
 
         } while (true);
     }
-    else if (Admin_Username_Validation(targetedInfo))
+    else if (Customer_Username_Validation(targetedInfo))
     {
         system("cls");
 
@@ -1360,12 +1387,12 @@ void Customer_Delete()
                 {
                 case 'Y':
                 case 'y':
-                    Admin_Delete();
+                    Customer_Delete();
                     break;
 
                 case 'N':
                 case 'n':
-                    Admin_Login_Menu();
+                    Customer_Login_Menu();
                     break;
 
                 default:
@@ -1420,11 +1447,11 @@ reverify:
         cout << "\t\t\t\t     Password: ";
         getline(cin, inputPW);
 
-        ifstream AdminInfo("Admin_Account.txt", ios::in);
+        ifstream CustomerInfo("Customer_Account.txt", ios::in);
 
-        if (AdminInfo.is_open())
+        if (CustomerInfo.is_open())
         {
-            while (getline(AdminInfo, existedInfo))
+            while (getline(CustomerInfo, existedInfo))
             {
                 // split username from password
                 string::size_type pos;
@@ -1441,11 +1468,12 @@ reverify:
             }
         }
 
-        AdminInfo.close();
+        CustomerInfo.close();
 
         if (verification)
         {
             cout << "\t\t\t\t  =======================================================================================\n";
+            // return back to the delete function
         }
         else
         {
@@ -1476,7 +1504,7 @@ reverify:
 
                     case 'N':
                     case 'n':
-                        Admin_Login_Menu();
+                        Customer_Login_Menu();
                         break;
 
                     default:
@@ -1502,10 +1530,46 @@ reverify:
         system("cls");
         cout << "\nError Message: Your Reentered Username Is Not Correct.";
         cout << "\nMake Sure Your Reentered Username Is The Same As The Confirmed Username You Want To Delete.";
-        cout << "\nPlease Try Again.\n\n";
-        system("pause");
-        system("cls");
-        Admin_Verification(targetedInfo);
+        cout << "\nPlease Try Again.\n";
+
+        do
+        {
+            cout << "\nEnter 'Y' To Reverify, 'N' To Go Back To Login Menu.";
+            cout << "\nYour Selection: ";
+            getline(cin, validation);
+            system("cls");
+
+            if (validation.length() == 1)
+            {
+                choice = validation[0];
+
+                switch (choice)
+                {
+                case 'Y':
+                case 'y':
+                    goto reverify;
+                    break;
+
+                case 'N':
+                case 'n':
+                    Customer_Login_Menu();
+                    break;
+
+                default:
+                    cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+            }
+            else
+            {
+                cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                system("pause");
+                system("cls");
+            }
+
+        } while (true);
     }
 }
 
@@ -1536,7 +1600,7 @@ void Customer_System()
             switch (choice)
             {
             case '1':
-
+                obj.View_Details();
                 break;
 
             case '2':
@@ -1567,4 +1631,9 @@ void Customer_System()
         }
 
     } while (true);
+}
+
+// function for a customer to check their own account details
+void a::View_Details()
+{
 }

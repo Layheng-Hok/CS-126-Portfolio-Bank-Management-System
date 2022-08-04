@@ -486,8 +486,6 @@ string a::CheckForDelete()
             cout << "From: Phnom Penh" << endl;
             getline(f2, busdata.to);
             cout << "To: " << busdata.to << endl;
-
-            return find;
         }
     }
 
@@ -502,7 +500,7 @@ string a::CheckForDelete()
     system("pause");
     system("cls");
 
-    return 0;
+    return find;
 }
 
 void a::DeleteData()
@@ -1004,8 +1002,6 @@ void a::CustomerSystem()
 
 int main()
 {
-    system("cls");
-
     do
     {
         cout << "\t\t\t=======================================================\n"
