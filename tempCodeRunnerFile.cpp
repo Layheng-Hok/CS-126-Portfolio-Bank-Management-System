@@ -41,11 +41,8 @@ void Customer_System();                             // function to display all t
 class a
 {
 protected:
-    string name;
-    string dob;
-    string gender;
-    string account_number, phone_number;
-    string occupation;
+    string name, dob, gender, account_number, phone_number, deposit, occupation;
+    int pin;
     int i = 0;
     int Num_Acc = 0;
     int count = 0;
@@ -807,13 +804,18 @@ void a::Add_Account()
     cout << "\n\tDate of birth(DD/MM/YY): ";
     getline(cin, dob);
     cout << "\n\tGender: ";
-    getline(cin, gender);
+    cin >> gender;
     cout << "\n\tAccount Number: ";
-    getline(cin, account_number);
+    cin >> account_number;
     cout << "\n\tPhone Number: ";
-    getline(cin, phone_number);
+    cin >> phone_number;
     cout << "\n\tOccupation: ";
+    cin.ignore();
     getline(cin, occupation);
+    cout << "\n\tPin : ";
+    cin >> pin;
+    cout << "\n\tDeposit : ";
+    cin >> deposit;
 
     ofstream Bank_Info("Bank_Account.txt", ios::app);
     Bank_Info << name << endl;
@@ -822,128 +824,71 @@ void a::Add_Account()
     Bank_Info << account_number << endl;
     Bank_Info << phone_number << endl;
     Bank_Info << occupation << endl;
+    Bank_Info << pin << endl;
+    Bank_Info << deposit << endl;
     Bank_Info.close();
+
     cout << "\n";
     system("pause");
     system("cls");
+    Admin_System();
 }
 void a::Edit_Account()
 {
 }
-
-string a::CheckForDelete()
+void a::Delete_Account()
 {
-    Count();
-    string str;
     string find;
-    bool notFound = true;
 
-    ifstream Bank_Info("Bank_Account.txt", ios::in);
-    while (!Bank_Info.eof())
-    {
-        getline(Bank_Info, str);
-        count++;
-    }
+    cout << "Enter Account Number you want to delete : ";
+    cin >> find;
 
+    ifstream Bank("Bank_Account.txt", ios::in);
     ofstream tempFile("temp.txt", ios::app);
-    ifstream Bank_Info1("Bank_Account.txt", ios::in);
-    
-    cout << "Enter Account Number to delete account: ";
-    getline(cin, find);
 
-    for (int j = 0; j < num; j++)
+    Bank >> name;
+    Bank >> dob;
+    Bank >> gender;
+    Bank >> account_number;
+    Bank >> phone_number;
+    Bank >> occupation;
+    Bank >> pin;
+    Bank >> deposit;
+
+    while (!Bank.eof())
     {
-        getline(Bank_Info1, name);
-        getline(Bank_Info1, dob);
-        getline(Bank_Info1, gender);
-        getline(Bank_Info1, account_number);
-        getline(Bank_Info1, phone_number);
-        getline(Bank_Info1, occupation);
-
-        if (account_number == find)
+        if (account_number != find)
         {
-            cout << name << endl;
-            cout << dob << endl;
-            cout << gender << endl;
-            cout << account_number << endl;
-            cout << phone_number << endl;
-            cout << occupation << endl;
-            notFound = false;
-            return find;
+            tempFile << name << endl;
+            tempFile << dob << endl;
+            tempFile << gender << endl;
+            tempFile << account_number << endl;
+            tempFile << phone_number << endl;
+            tempFile << occupation << endl;
+            tempFile << pin << endl;
+            tempFile << deposit << endl;
         }
-    }
-    if (notFound == false)
-    {
-        cout << "\nData Not Fount\n\n";
+        else
+        {
+            cout << "Record Deleted" << endl;
+        }
+        Bank >> name;
+        Bank >> dob;
+        Bank >> gender;
+        Bank >> account_number;
+        Bank >> phone_number;
+        Bank >> occupation;
+        Bank >> pin;
+        Bank >> deposit;
     }
     tempFile.close();
-    Bank_Info1.close();
+    Bank.close();
     remove("Bank_Account.txt");
     rename("temp.txt", "Bank_Account.txt");
     system("pause");
     system("cls");
-    return 0;
+    Admin_System();
 }
-
-void a::Delete_Account()
-{
-    bool found = false;
-    string find = CheckForDelete();
-    cout << "\nDo You Want To Delete This Record?\n";
-    cout << "Press 'Y' To Confirm Or 'N' To Cancel: ";
-    char choice;
-    cin >> choice;
-
-    if (choice == 'y' || choice == 'Y')
-    {
-        ofstream tempFile("temp.txt", ios::app);
-        ifstream Bank_Info1("Bank_Account.txt", ios::in);
-
-        for (int j = 0; j < num; j++)
-        {
-            getline(Bank_Info1, name);
-            getline(Bank_Info1, dob);
-            getline(Bank_Info1, gender);
-            getline(Bank_Info1, account_number);
-            getline(Bank_Info1, phone_number);
-            getline(Bank_Info1, occupation);
-
-            if (account_number != find)
-            {
-                tempFile << name << endl;
-                tempFile << dob << endl;
-                tempFile << gender << endl;
-                tempFile << account_number << endl;
-                tempFile << phone_number << endl;
-                tempFile << occupation << endl;
-            }
-            if (account_number == find){
-                found = true;
-            }
-        }
-        tempFile.close();
-        Bank_Info1.close();
-        remove("Bank_Account.txt");
-        rename("temp.txt", "Bank_Account.txt");
-        cout << "\nData Deleted Successfully\n\n";
-        if (found){
-            num--;
-        }
-    }
-    else if (choice == 'n' || choice == 'N')
-    {
-        cout << "\nRecord Not Deleted\n\n";
-    }
-
-    else
-    {
-        cout << "\nSorry, invalid input.\n\n";
-    }
-    system("pause");
-    system("cls");
-    Admin_Login_Menu();
-}
-
 // ***************************************************************
 //                       Customer Functions
 // ***************************************************************
