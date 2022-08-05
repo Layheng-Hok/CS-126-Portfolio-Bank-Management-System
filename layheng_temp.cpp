@@ -42,12 +42,9 @@ class a
 {
 protected:
     string name, DOB, gender, occupation;
-    unsigned int account, mobile, balance, deposit, age, birthDate, birthMonth, birthYear, pin;
+    unsigned int account, balance, deposit, age, birthDate, birthMonth, birthYear, pin;
     string month[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     int i = 0;
-    int Num_Acc = 0;
-    int count = 0;
-    int num;
 
 public:
     int age_conversion(int bd, int bm, int by);
@@ -61,7 +58,9 @@ public:
 
     // customer functions
     void View_Details();                               // function for a customer to display their own account details
+    void Make_Transaction();                           // function for a customer to transfer money to a different account
     bool Account_Validation(unsigned int targetedAcc); // function to check if an account exists
+    bool Balance_Validation(long balance);             // function to check a user's balance before making a transaction
 } obj;
 
 int a::age_conversion(int bd, int bm, int by)
@@ -837,6 +836,7 @@ void Admin_System()
 void a::Add_Account()
 {
 }
+
 void a::Edit_Account()
 {
 }
@@ -1461,6 +1461,8 @@ reverify:
 // function to display all the privileges that a customer has on the program
 void Customer_System()
 {
+    system("cls");
+
     do
     {
         cout << "\t\t\t\t  =======================================================================================\n"
@@ -1471,7 +1473,7 @@ void Customer_System()
                 "\n"
                 "\n\t\t\t\t  Here Are Your Privileges:\n\n"
                 "\t\t\t\t     (1)  See Account Details\n\n"
-                "\t\t\t\t     (2)  Make A Transfer\n\n"
+                "\t\t\t\t     (2)  Make A Transaction\n\n"
                 "\t\t\t\t     (3)  Show Transaction History\n\n"
                 "\t\t\t\t     (B)  Back To The Main Menu\n"
                 "\n\t\t\t\t  Your Selection: ";
@@ -1489,7 +1491,7 @@ void Customer_System()
                 break;
 
             case '2':
-
+                obj.Make_Transaction();
                 break;
 
             case '3':
@@ -1533,21 +1535,21 @@ void a::View_Details()
             "\n\t\t\t\t  Enter Your Account Number: ";
     cin >> targetedAcc;
 
-    ifstream bank("Bank_Account.txt", ios::in);
+    ifstream bank2("Bank_Account.txt", ios::in);
 
-    while (!bank.eof())
+    while (!bank2.eof())
     {
-        bank >> account;
-        bank.ignore();
-        getline(bank, name);
-        bank >> gender;
-        bank >> birthDate;
-        bank >> birthMonth;
-        bank >> birthYear;
-        bank.ignore();
-        getline(bank, occupation);
-        bank >> balance;
-        bank >> pin;
+        bank2 >> account;
+        bank2.ignore();
+        getline(bank2, name);
+        bank2 >> gender;
+        bank2 >> birthDate;
+        bank2 >> birthMonth;
+        bank2 >> birthYear;
+        bank2.ignore();
+        getline(bank2, occupation);
+        bank2 >> balance;
+        bank2 >> pin;
 
         if (targetedAcc == account)
         {
@@ -1576,12 +1578,12 @@ void a::View_Details()
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   No Record Found \n\n";
+        cout << "\t\t\t\t   No Record Found. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
     }
 
-    bank.close();
+    bank2.close();
 
     system("pause");
     cin.clear();
@@ -1589,41 +1591,219 @@ void a::View_Details()
     Customer_System();
 }
 
+// function for a customer to transfer money to a different account
+void a::Make_Transaction()
+{
+    long fromAcc, toAcc, amountTransfer, amountUSER1, amountUSER2;
+
+    cout << "\t\t\t\t  =======================================================================================\n"
+            "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
+            "\t\t\t\t  =======================================================================================\n"
+            "\n"
+            "\t\t\t\t                            : :  L O G I N _ S Y S T E M  : :                            \n"
+            "\n"
+            "\t\t\t\t     Making A Transaction\n\n";
+    cout << "\t\t\t\t     Enter Your Account Number: ";
+    cin >> fromAcc;
+
+    if (cin.fail())
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        system("pause");
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("cls");
+        Make_Transaction();
+    }
+
+    if (Account_Validation(fromAcc))
+    {
+    back1:
+        cout << "\t\t\t\t     Transfer To (Account Number): ";
+        cin >> toAcc;
+        if (cin.fail())
+        {
+            cout << endl;
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+
+            cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+
+            system("pause");
+            cin.clear();
+            cin.ignore(10000, '\n');
+            goto back1;
+        }
+
+        if (Account_Validation(toAcc))
+        {
+        back2:
+            cout << "\t\t\t\t     Enter The Transferred Amount ($): ";
+            cin >> amountTransfer;
+
+            if (cin.fail())
+            {
+                cout << endl;
+                cout << "\t\t\t\t  =======================================================================================\n\n";
+
+                cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+                cout << "\t\t\t\t  =======================================================================================\n\n";
+
+                system("pause");
+                cin.clear();
+                cin.ignore(10000, '\n');
+                system("cls");
+                goto back2;
+            }
+        }
+        else
+        {
+            cout << endl;
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+
+            cout << "\t\t\t\t   Account Does Not Exist. \n\n";
+            cout << "\t\t\t\t   Please Try Again. \n\n";
+
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+
+            do
+            {
+                cout << "\n\t\t\t\t  Enter 'Y' To Try Again, 'N' To Go Back To Customer Menu.";
+                cout << "\n\t\t\t\t  Your Selection: ";
+                getline(cin, validation);
+                system("cls");
+
+                if (validation.length() == 1)
+                {
+                    choice = validation[0];
+
+                    switch (choice)
+                    {
+                    case 'Y':
+                    case 'y':
+                        goto back1;
+                        break;
+
+                    case 'N':
+                    case 'n':
+                        Customer_Login_Menu();
+                        break;
+
+                    default:
+                        cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                        system("pause");
+                        system("cls");
+                        break;
+                    }
+                }
+                else
+                {
+                    cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                    system("pause");
+                    system("cls");
+                }
+
+            } while (true);
+        }
+    }
+    else
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Account Does Not Exist. \n\n";
+        cout << "\t\t\t\t   Please Try Again. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        do
+        {
+            cout << "\n\t\t\t\t  Enter 'Y' To Try Again, 'N' To Go Back To Customer Menu.";
+            cout << "\n\t\t\t\t  Your Selection: ";
+            getline(cin, validation);
+            system("cls");
+
+            if (validation.length() == 1)
+            {
+                choice = validation[0];
+
+                switch (choice)
+                {
+                case 'Y':
+                case 'y':
+                    Make_Transaction();
+                    break;
+
+                case 'N':
+                case 'n':
+                    Customer_Login_Menu();
+                    break;
+
+                default:
+                    cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+            }
+            else
+            {
+                cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                system("pause");
+                system("cls");
+            }
+
+        } while (true);
+    }
+}
+
 // function to check if an account exists
 bool a::Account_Validation(unsigned int targetedAcc)
 {
     bool found = false;
 
-    ifstream bank("Bank_Account.txt", ios::in);
+    ifstream bank2("Bank_Account.txt", ios::in);
 
-    if (bank.is_open())
+    if (bank2.is_open())
     {
-        for (int j; j < 4; j++)
+        while (!bank2.eof())
         {
-            bank >> account;
-            bank >> name;
-            bank >> gender;
-            bank >> birthDate;
-            bank >> birthMonth;
-            bank >> birthYear;
-            bank >> occupation;
-            bank >> balance;
+            bank2 >> account;
+            bank2.ignore();
+            getline(bank2, name);
+            bank2 >> gender;
+            bank2 >> birthDate;
+            bank2 >> birthMonth;
+            bank2 >> birthYear;
+            bank2.ignore();
+            getline(bank2, occupation);
+            bank2 >> balance;
+            bank2 >> pin;
 
             if (targetedAcc == account)
             {
                 found = true;
-                cout << "\t\t\t\t   Your Account Information: \n\n";
-                cout << "\t\t\t\t   Account Number: " << account << "\n";
-                cout << "\t\t\t\t   Card Holder:    " << name << "\n";
-                cout << "\t\t\t\t   Gender:         " << gender << ".\n";
-                cout << "\t\t\t\t   Date Of Birth:  " << birthDate << " / " << birthMonth << " / " << birthYear << ".\n";
-                cout << "\t\t\t\t   Occupation:     " << occupation << ".\n";
-                cout << "\t\t\t\t   Balance:        $" << balance << ".\n\n";
             }
         }
     }
 
-    bank.close();
+    bank2.close();
+
+    cin.clear();
+    cin.ignore(10000, '\n');
 
     return found;
+}
+
+// function to check a user's balance before making a transaction
+bool Balance_Validation(long balance)
+{
 }

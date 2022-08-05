@@ -42,12 +42,9 @@ class a
 {
 protected:
     string name, DOB, gender, occupation;
-    unsigned int account, mobile, balance, deposit, age, birthDate, birthMonth, birthYear, pin;
+    unsigned int account, balance, deposit, age, birthDate, birthMonth, birthYear, pin;
     string month[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     int i = 0;
-    int Num_Acc = 0;
-    int count = 0;
-    int num;
 
 public:
     int age_conversion(int bd, int bm, int by);
@@ -1471,7 +1468,7 @@ void Customer_System()
                 "\n"
                 "\n\t\t\t\t  Here Are Your Privileges:\n\n"
                 "\t\t\t\t     (1)  See Account Details\n\n"
-                "\t\t\t\t     (2)  Make A Transfer\n\n"
+                "\t\t\t\t     (2)  Make A Transaction\n\n"
                 "\t\t\t\t     (3)  Show Transaction History\n\n"
                 "\t\t\t\t     (B)  Back To The Main Menu\n"
                 "\n\t\t\t\t  Your Selection: ";
@@ -1533,21 +1530,21 @@ void a::View_Details()
             "\n\t\t\t\t  Enter Your Account Number: ";
     cin >> targetedAcc;
 
-    ifstream bank("Bank_Account.txt", ios::in);
+    ifstream bank2("Bank_Account.txt", ios::in);
 
-    while (!bank.eof())
+    while (!bank2.eof())
     {
-        bank >> account;
-        bank.ignore();
-        getline(bank, name);
-        bank >> gender;
-        bank >> birthDate;
-        bank >> birthMonth;
-        bank >> birthYear;
-        bank.ignore();
-        getline(bank, occupation);
-        bank >> balance;
-        bank >> pin;
+        bank2 >> account;
+        bank2.ignore();
+        getline(bank2, name);
+        bank2 >> gender;
+        bank2 >> birthDate;
+        bank2 >> birthMonth;
+        bank2 >> birthYear;
+        bank2.ignore();
+        getline(bank2, occupation);
+        bank2 >> balance;
+        bank2 >> pin;
 
         if (targetedAcc == account)
         {
@@ -1581,7 +1578,7 @@ void a::View_Details()
         cout << "\t\t\t\t  =======================================================================================\n\n";
     }
 
-    bank.close();
+    bank2.close();
 
     system("pause");
     cin.clear();
