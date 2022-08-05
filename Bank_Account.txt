@@ -1,0 +1,27 @@
+111111111
+L Lawliet
+M
+25
+08
+2003
+Detector
+1000
+7768
+111111112
+Kakashi Hatake
+M
+12
+12
+1990
+Ninja
+500
+1232
+111111113
+GinIchimaru
+M
+27
+11
+1990
+Soul Reaper
+700
+5858

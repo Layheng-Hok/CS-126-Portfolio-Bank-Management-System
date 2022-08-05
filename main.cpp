@@ -41,26 +41,46 @@ void Customer_System();                             // function to display all t
 class a
 {
 protected:
-    string name;
-    string dob;
-    string gender;
-    string account_number, phone_number;
-    string occupation;
-    int i;
-    int count = 0;
+    string name, DOB, gender, occupation;
+    unsigned int account, mobile, balance, deposit, age, birthDate, birthMonth, birthYear, pin;
+    string month[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    int i = 0;
     int Num_Acc = 0;
+    int count = 0;
     int num;
 
 public:
+    int age_conversion(int bd, int bm, int by);
+
     // admin functions
     void Add_Account();
     string CheckForDelete();
     void Delete_Account();
     void Edit_Account();
+    void Count();
 
     // customer functions
-    void View_Details(); // function for a customer to check their own account details
+    void View_Details();                               // function for a customer to display their own account details
+    bool Account_Validation(unsigned int targetedAcc); // function to check if an account exists
 } obj;
+
+int a::age_conversion(int bd, int bm, int by)
+{
+    int age;
+
+    struct tm date = {0};
+    date.tm_year = by - 1900;
+    date.tm_mon = bm - 1;
+    date.tm_mday = bd;
+
+    time_t normal = mktime(&date);
+    time_t current;
+    time(&current);
+    age = (difftime(current, normal) + 86400L / 2) / 86400L;
+    age = age / 365;
+
+    return age;
+}
 
 // global variables
 char choice;       // for accepting a user's selection
@@ -816,45 +836,6 @@ void Admin_System()
 // function to add account
 void a::Add_Account()
 {
-    system("cls");
-    cout << "\n\nEnter The Following Information" << endl;
-    cout << "\n\tName: ";
-    getline(cin, name);
-    for (i = 0; i < name.length(); i++)
-    {
-        if (isspace(name[i]))
-        {
-            continue;
-        }
-        if (!isalpha(name[i]))
-        {
-            system("cls");
-            cout << "\nName must not contain special character\n";
-            system("pause");
-        }
-    }
-    cout << "\n\tDate of birth(DD/MM/YY): ";
-    getline(cin, dob);
-    cout << "\n\tGender: ";
-    getline(cin, gender);
-    cout << "\n\tAccount Number: ";
-    getline(cin, account_number);
-    cout << "\n\tPhone Number: ";
-    getline(cin, phone_number);
-    cout << "\n\tOccupation: ";
-    getline(cin, occupation);
-
-    ofstream Bank_Info("Bank_Account.txt", ios::app);
-    Bank_Info << name << endl;
-    Bank_Info << dob << endl;
-    Bank_Info << gender << endl;
-    Bank_Info << account_number << endl;
-    Bank_Info << phone_number << endl;
-    Bank_Info << occupation << endl;
-    Bank_Info.close();
-    cout << "\n";
-    system("pause");
-    system("cls");
 }
 void a::Edit_Account()
 {
@@ -862,106 +843,10 @@ void a::Edit_Account()
 
 string a::CheckForDelete()
 {
-    string str;
-    string find;
-    bool notFound = true;
-
-    ifstream Bank_Info("Bank_Account.txt", ios::in);
-    while (!Bank_Info.eof())
-    {
-        getline(Bank_Info, str);
-        count++;
-    }
-
-    ofstream tempFile("temp.txt", ios::app);
-    ifstream Bank_Info1("Bank_Account.txt", ios::in);
-
-    cout << "Enter Account Number to delete account: ";
-    getline(cin, find);
-
-    for (int j = 0; (j < Num_Acc) || (!Bank_Info1.eof()); j++)
-    {
-        getline(Bank_Info1, name);
-        getline(Bank_Info1, dob);
-        getline(Bank_Info1, gender);
-        getline(Bank_Info1, account_number);
-        getline(Bank_Info1, phone_number);
-        getline(Bank_Info1, occupation);
-
-        if (account_number == find)
-        {
-            cout << name << endl;
-            cout << dob << endl;
-            cout << gender << endl;
-            cout << account_number << endl;
-            cout << phone_number << endl;
-            cout << occupation << endl;
-            notFound = false;
-            return find;
-        }
-    }
-    if (notFound == false)
-    {
-        cout << "\nData Not Fount\n\n";
-    }
-    tempFile.close();
-    Bank_Info1.close();
-    remove("Bank_Account.txt");
-    rename("temp.txt", "Bank_Account.txt");
-    system("pause");
-    system("cls");
-    return 0;
 }
 
 void a::Delete_Account()
 {
-    string find = CheckForDelete();
-    cout << "\nDo You Want To Delete This Record?\n";
-    cout << "Press 'Y' To Confirm Or 'N' To Cancel: ";
-    char choice;
-    cin >> choice;
-
-    if (choice == 'y' || choice == 'Y')
-    {
-        ofstream tempFile("temp.txt", ios::app);
-        ifstream Bank_Info1("Bank_Account.txt", ios::in);
-
-        for (int j = 0; (j < Num_Acc) || (!Bank_Info1.eof()); j++)
-        {
-            getline(Bank_Info1, name);
-            getline(Bank_Info1, dob);
-            getline(Bank_Info1, gender);
-            getline(Bank_Info1, account_number);
-            getline(Bank_Info1, phone_number);
-            getline(Bank_Info1, occupation);
-
-            if (account_number != find)
-            {
-                tempFile << name << endl;
-                tempFile << dob << endl;
-                tempFile << gender << endl;
-                tempFile << account_number << endl;
-                tempFile << phone_number << endl;
-                tempFile << occupation << endl;
-            }
-        }
-        tempFile.close();
-        Bank_Info1.close();
-        remove("Bank_Account.txt");
-        rename("temp.txt", "Bank_Account.txt");
-        cout << "\nData Deleted Successfully\n\n";
-    }
-    else if (choice == 'n' || choice == 'N')
-    {
-        cout << "\nRecord Not Deleted\n\n";
-    }
-
-    else
-    {
-        cout << "\nSorry, invalid input.\n\n";
-    }
-    system("pause");
-    system("cls");
 }
 
 // ***************************************************************
@@ -1633,7 +1518,112 @@ void Customer_System()
     } while (true);
 }
 
-// function for a customer to check their own account details
+// function for a customer to display their own account details
 void a::View_Details()
 {
+    unsigned targetedAcc;
+    bool notFound = true;
+
+    cout << "\t\t\t\t  =======================================================================================\n"
+            "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
+            "\t\t\t\t  =======================================================================================\n"
+            "\n"
+            "\t\t\t\t                          : :  C U S T O M E R _ S Y S T E M   : :                       \n"
+            "\n"
+            "\n\t\t\t\t  Enter Your Account Number: ";
+    cin >> targetedAcc;
+
+    ifstream bank("Bank_Account.txt", ios::in);
+
+    while (!bank.eof())
+    {
+        bank >> account;
+        bank.ignore();
+        getline(bank, name);
+        bank >> gender;
+        bank >> birthDate;
+        bank >> birthMonth;
+        bank >> birthYear;
+        bank.ignore();
+        getline(bank, occupation);
+        bank >> balance;
+        bank >> pin;
+
+        if (targetedAcc == account)
+        {
+            notFound = false;
+
+            cout << endl;
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+
+            cout << "\t\t\t\t   Your Account Information: \n\n";
+            cout << "\t\t\t\t   Account Number: " << account << "\n";
+            cout << "\t\t\t\t   Card Holder:    " << name << "\n";
+            cout << "\t\t\t\t   Gender:         " << gender << "\n";
+            cout << "\t\t\t\t   Date Of Birth:  " << birthDate << " / " << month[birthMonth - 1] << " / " << birthYear << "\n";
+            cout << "\t\t\t\t   Age:            " << age_conversion(birthDate, birthMonth, birthYear) << "\n ";
+            cout << "\t\t\t\t   Occupation:     " << occupation << "\n";
+            cout << "\t\t\t\t   Balance:        $" << balance << "\n\n";
+
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+
+            break;
+        }
+    }
+
+    if (notFound)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   No Record Found \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+    }
+
+    bank.close();
+
+    system("pause");
+    cin.clear();
+    cin.ignore(10000, '\n');
+    Customer_System();
+}
+
+// function to check if an account exists
+bool a::Account_Validation(unsigned int targetedAcc)
+{
+    bool found = false;
+
+    ifstream bank("Bank_Account.txt", ios::in);
+
+    if (bank.is_open())
+    {
+        for (int j; j < 4; j++)
+        {
+            bank >> account;
+            bank >> name;
+            bank >> gender;
+            bank >> birthDate;
+            bank >> birthMonth;
+            bank >> birthYear;
+            bank >> occupation;
+            bank >> balance;
+
+            if (targetedAcc == account)
+            {
+                found = true;
+                cout << "\t\t\t\t   Your Account Information: \n\n";
+                cout << "\t\t\t\t   Account Number: " << account << "\n";
+                cout << "\t\t\t\t   Card Holder:    " << name << "\n";
+                cout << "\t\t\t\t   Gender:         " << gender << ".\n";
+                cout << "\t\t\t\t   Date Of Birth:  " << birthDate << " / " << birthMonth << " / " << birthYear << ".\n";
+                cout << "\t\t\t\t   Occupation:     " << occupation << ".\n";
+                cout << "\t\t\t\t   Balance:        $" << balance << ".\n\n";
+            }
+        }
+    }
+
+    bank.close();
+
+    return found;
 }
