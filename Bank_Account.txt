@@ -1,27 +1,27 @@
+123456789
+Lyyou Heng
+F
+2
+2
+2005
+Data Sientist
+100
+2607
 111111111
+Layheng Hok
+M
+12
+4
+2003
+Senior Software Engineer
+100
+2607
+111111112
 L Lawliet
 M
-25
-08
-2003
+11
+12
+1999
 Detector
 1000
-7768
-111111112
-Kakashi Hatake
-M
-12
-12
-1990
-Ninja
-500
-1232
-111111113
-GinIchimaru
-M
-27
-11
-1990
-Soul Reaper
-700
-5858
+2699
