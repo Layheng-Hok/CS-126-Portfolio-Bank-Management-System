@@ -19,6 +19,7 @@
 #include <ctype.h>
 #include <vector>
 #include <iterator>
+#include <iomanip>
 
 using namespace std;
 
@@ -54,6 +55,8 @@ public:
     void Admin_Add_Account();
     void Admin_Delete_Account();
     void Admin_Edit_Account();
+    void Admin_Display_All_Account();
+    void Admin_Search_Account();
 
     // customer functions
     void View_Details();                               // function for a customer to display their own account details
@@ -779,7 +782,7 @@ void Admin_System()
                 "\t\t\t\t     (2)  Delete An Account\n\n"
                 "\t\t\t\t     (3)  Edit An Account\n\n"
                 "\t\t\t\t     (4)  Display All Accounts\n\n"
-                "\t\t\t\t     (5)  Check Password\n\n"
+                "\t\t\t\t     (5)  Search Account\n\n"
                 "\t\t\t\t     (B)  Back To The Main Menu\n"
                 "\n\t\t\t\t  Your Selection: ";
         getline(cin, validation);
@@ -798,15 +801,17 @@ void Admin_System()
             case '2':
                 obj.Admin_Delete_Account();
                 break;
+
             case '3':
                 obj.Admin_Edit_Account();
                 break;
-            case '4':
 
+            case '4':
+                obj.Admin_Display_All_Account();
                 break;
 
             case '5':
-
+                obj.Admin_Search_Account();
                 break;
 
             case 'B':
@@ -856,8 +861,6 @@ void a::Admin_Add_Account()
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
-        cin.clear();
-        cin.ignore(10000, '\n');
         system("cls");
         Admin_Add_Account();
     }
@@ -871,8 +874,6 @@ void a::Admin_Add_Account()
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
-        cin.clear();
-        cin.ignore(10000, '\n');
         system("cls");
         Admin_Add_Account();
     }
@@ -886,14 +887,11 @@ void a::Admin_Add_Account()
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
-        cin.clear();
-        cin.ignore(10000, '\n');
         system("cls");
         Admin_Add_Account();
     }
 fname:
     cout << "\n\t\t\t\t     First Name : ";
-    cin.ignore();
     getline(cin, fname);
     // Covert the first letter of first name to uppercase
     fname[0] = toupper(fname[0]);
@@ -910,8 +908,6 @@ fname:
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
-            cin.clear();
-            cin.ignore(10000, '\n');
             system("cls");
             goto fname;
         }
@@ -925,8 +921,6 @@ fname:
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
-            cin.clear();
-            cin.ignore(10000, '\n');
             system("cls");
             goto fname;
         }
@@ -949,8 +943,6 @@ lname:
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
-            cin.clear();
-            cin.ignore(10000, '\n');
             system("cls");
             goto lname;
         }
@@ -964,8 +956,6 @@ lname:
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
-            cin.clear();
-            cin.ignore(10000, '\n');
             system("cls");
             goto lname;
         }
@@ -980,21 +970,6 @@ gender:
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
         cout << "\t\t\t\t   Error Message: Only M and F are accepted. \n\n";
-
-        cout << "\t\t\t\t  =======================================================================================\n\n";
-        system("pause");
-        cin.clear();
-        cin.ignore(10000, '\n');
-        system("cls");
-        goto gender;
-    }
-    // check if the gender entered is a space
-    if (isspace(gender[0]))
-    {
-        cout << endl;
-        cout << "\t\t\t\t  =======================================================================================\n\n";
-
-        cout << "\t\t\t\t   Error Message: Last Name Must Not Contain Space. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
@@ -1037,8 +1012,6 @@ DOB:
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
-            cin.clear();
-            cin.ignore(10000, '\n');
             system("cls");
             goto DOB;
         }
@@ -1053,8 +1026,6 @@ DOB:
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
-        cin.clear();
-        cin.ignore(10000, '\n');
         system("cls");
         goto DOB;
     }
@@ -1062,7 +1033,7 @@ DOB:
 occupation:
     cout << "\n\t\t\t\t     Occupation : ";
     getline(cin, occupation);
-
+    occupation[0] = toupper(occupation[0]);
     // check if the occupation entered is characters
     for (char c : occupation)
     {
@@ -1075,8 +1046,6 @@ occupation:
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
-            cin.clear();
-            cin.ignore(10000, '\n');
             system("cls");
             goto occupation;
         }
@@ -1155,17 +1124,17 @@ pin:
     birthMonth = stoi(DOB.substr(3, 2));
     birthYear = stoi(DOB.substr(6, 4));
     // write to information to Bank_Account.txt
-    ofstream Bank1("Bank_Account.txt", ios::app);
-    Bank1 << account << endl;
-    Bank1 << fname << " " << lname << endl;
-    Bank1 << gender << endl;
-    Bank1 << birthDate << endl;
-    Bank1 << birthMonth << endl;
-    Bank1 << birthYear << endl;
-    Bank1 << occupation << endl;
-    Bank1 << deposit << endl;
-    Bank1 << pin << endl;
-    Bank1.close();
+    ofstream bank1("Bank_Account.txt", ios::app);
+    bank1 << acc << endl;
+    bank1 << fname << " " << lname << endl;
+    bank1 << gender << endl;
+    bank1 << birthDate << endl;
+    bank1 << birthMonth << endl;
+    bank1 << birthYear << endl;
+    bank1 << occupation << endl;
+    bank1 << deposit << endl;
+    bank1 << pin << endl;
+    bank1.close();
     cout << endl;
     cout << "\t\t\t\t     Account Is Added Successfully.\n\n";
     system("pause");
@@ -1256,7 +1225,7 @@ void a::Admin_Delete_Account()
             cout << endl;
             cout << "\t\t\t\t  =======================================================================================\n\n";
 
-            cout << "\t\t\t\t   Your Account Information: \n\n";
+            cout << "\t\t\t\t   Information Found: \n\n";
             cout << "\t\t\t\t   Account Number: " << account << "\n";
             cout << "\t\t\t\t   Card Holder:    " << name << "\n";
             cout << "\t\t\t\t   Gender:         " << gender << "\n";
@@ -1355,6 +1324,7 @@ void a::Admin_Delete_Account()
     Admin_System();
 }
 
+// function to allow to edit account of a customer
 void a::Admin_Edit_Account()
 {
     string newFname, newLname, newName, newDOB, newGender, newOccupation;
@@ -1405,7 +1375,7 @@ void a::Admin_Edit_Account()
     }
 
     ifstream bank2("Bank_Account.txt", ios::in);
-    ofstream tempFile("temp1.txt", ios::app);
+    ofstream tempFile("temp.txt", ios::app);
     bank2 >> account;
     bank2.ignore();
     getline(bank2, name);
@@ -1420,6 +1390,7 @@ void a::Admin_Edit_Account()
 
     while (!bank2.eof())
     {
+        // if account is not equal to find then write those info in file Bank_Account.txt
         if (account != find)
         {
             tempFile << account << endl;
@@ -1432,13 +1403,14 @@ void a::Admin_Edit_Account()
             tempFile << balance << endl;
             tempFile << pin << endl;
         }
+        // if account is equal to find then display those info and allow user to enter new info
         else
         {
             notFound = false;
             cout << endl;
             cout << "\t\t\t\t  =======================================================================================\n\n";
 
-            cout << "\t\t\t\t   Your Account Information: \n\n";
+            cout << "\t\t\t\t   Information Found: \n\n";
             cout << "\t\t\t\t   Account Number: " << account << "\n";
             cout << "\t\t\t\t   Card Holder:    " << name << "\n";
             cout << "\t\t\t\t   Gender:         " << gender << "\n";
@@ -1449,286 +1421,319 @@ void a::Admin_Edit_Account()
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             cout << endl;
+            cin.ignore();
+        again:
+            cin.clear();
+            cout << "\t\t\t\t     Do You Want To Edit The Account Number '" << account << "'?\n\n";
 
-        //     string Pin;
-        //     cout << "\t\t\t\t  Edit The Following Information\n";
-        // newFname:
-        //     cout << "\n\t\t\t\t     New First Name : ";
-        //     cin.ignore();
-        //     getline(cin, newFname);
-        //     // Covert the first letter of first name to uppercase
-        //     newFname[0] = toupper(newFname[0]);
+            cout << "\t\t\t\t     Enter 'Y' To Confirm, 'N' To Cancel.\n";
+            cout << "\t\t\t\t     Your Selection: ";
+            // cin.ignore();
+            getline(cin, validation);
+            if (validation.length() == 1)
+            {
+                choice = validation[0];
 
-        //     for (char c : newFname)
-        //     {
-        //         // check if there is any space
-        //         if (isspace(c))
-        //         {
-        //             cout << endl;
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
+                switch (choice)
+                {
+                case 'Y':
+                case 'y':
+                {
+                    string Pin;
+                    system("cls");
+                    cout << "\t\t\t\t  =======================================================================================\n"
+                            "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
+                            "\t\t\t\t  =======================================================================================\n"
+                            "\n"
+                            "\t\t\t\t                            : :  A D M I N _ S Y S T E M   : :                           \n"
+                            "\n";
+                    cout << "\t\t\t\t  Edit The Following Information\n";
+                newFname:
+                    cout << "\n\t\t\t\t     New First Name : ";
+                    getline(cin, newFname);
+                    // Covert the first letter of first name to uppercase
+                    newFname[0] = toupper(newFname[0]);
 
-        //             cout << "\t\t\t\t   Error Message: First Name Must Not Contain Space. \n\n";
+                    for (char c : newFname)
+                    {
+                        // check if there is any space
+                        if (isspace(c))
+                        {
+                            cout << endl;
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
-        //             system("pause");
-        //             cin.clear();
-        //             cin.ignore(10000, '\n');
-        //             system("cls");
-        //             goto newFname;
-        //         }
-        //         // check if it's not a character
-        //         if (!isalpha(c))
-        //         {
-        //             cout << endl;
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
+                            cout << "\t\t\t\t   Error Message: First Name Must Not Contain Space. \n\n";
 
-        //             cout << "\t\t\t\t   Error Message: First Name Must Be Characters. \n\n";
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
+                            system("pause");
+                            system("cls");
+                            goto newFname;
+                        }
+                        // check if it's not a character
+                        if (!isalpha(c))
+                        {
+                            cout << endl;
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
-        //             system("pause");
-        //             cin.clear();
-        //             cin.ignore(10000, '\n');
-        //             system("cls");
-        //             goto newFname;
-        //         }
-        //     }
-        // newLname:
-        //     cout << "\n\t\t\t\t     New Last Name : ";
-        //     getline(cin, newLname);
-        //     // Covert the first letter of last name to uppercase
-        //     newLname[0] = toupper(newLname[0]);
+                            cout << "\t\t\t\t   Error Message: First Name Must Be Characters. \n\n";
 
-        //     for (char c : newLname)
-        //     {
-        //         // check if there is any space
-        //         if (isspace(c))
-        //         {
-        //             cout << endl;
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
+                            system("pause");
+                            system("cls");
+                            goto newFname;
+                        }
+                    }
+                newLname:
+                    cout << "\n\t\t\t\t     New Last Name : ";
+                    getline(cin, newLname);
+                    // Covert the first letter of last name to uppercase
+                    newLname[0] = toupper(newLname[0]);
 
-        //             cout << "\t\t\t\t   Error Message: Last Name Must Not Contain Space. \n\n";
+                    for (char c : newLname)
+                    {
+                        // check if there is any space
+                        if (isspace(c))
+                        {
+                            cout << endl;
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
-        //             system("pause");
-        //             cin.clear();
-        //             cin.ignore(10000, '\n');
-        //             system("cls");
-        //             goto newLname;
-        //         }
-        //         // check if it's not a character
-        //         if (!isalpha(c))
-        //         {
-        //             cout << endl;
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
+                            cout << "\t\t\t\t   Error Message: Last Name Must Not Contain Space. \n\n";
 
-        //             cout << "\t\t\t\t   Error Message: Last Name Must Be Characters. \n\n";
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
+                            system("pause");
+                            system("cls");
+                            goto newLname;
+                        }
+                        // check if it's not a character
+                        if (!isalpha(c))
+                        {
+                            cout << endl;
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
-        //             system("pause");
-        //             cin.clear();
-        //             cin.ignore(10000, '\n');
-        //             system("cls");
-        //             goto newLname;
-        //         }
-        //     }
-        // newGender:
-        //     cout << "\n\t\t\t\t     New Gender(M or F) : ";
-        //     cin >> newGender;
-        //     //  check if the gender is not 1 character
-        //     if (newGender.length() != 1)
-        //     {
-        //         cout << endl;
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
+                            cout << "\t\t\t\t   Error Message: Last Name Must Be Characters. \n\n";
 
-        //         cout << "\t\t\t\t   Error Message: Only M and F are accepted. \n\n";
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
+                            system("pause");
+                            system("cls");
+                            goto newLname;
+                        }
+                    }
+                newGender:
+                    cout << "\n\t\t\t\t     New Gender(M or F) : ";
+                    cin >> newGender;
+                    //  check if the gender is not 1 character
+                    if (newGender.length() != 1)
+                    {
+                        cout << endl;
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
-        //         system("pause");
-        //         cin.clear();
-        //         cin.ignore(10000, '\n');
-        //         system("cls");
-        //         goto newGender;
-        //     }
-        //     // check if the gender entered is a space
-        //     if (isspace(newGender[0]))
-        //     {
-        //         cout << endl;
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
+                        cout << "\t\t\t\t   Error Message: Only M and F are accepted. \n\n";
 
-        //         cout << "\t\t\t\t   Error Message: Last Name Must Not Contain Space. \n\n";
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+                        system("pause");
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                        system("cls");
+                        goto newGender;
+                    }
+                    // check if the gender entered is not F or M then display the erro message
+                    if (!(newGender[0] == 'F' || newGender[0] == 'f' || newGender[0] == 'M' || newGender[0] == 'm'))
+                    {
+                        cout << endl;
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
-        //         system("pause");
-        //         cin.clear();
-        //         cin.ignore(10000, '\n');
-        //         system("cls");
-        //         goto newGender;
-        //     }
-        //     // check if the gender entered is not F or M then display the erro message
-        //     if (!(newGender[0] == 'F' || newGender[0] == 'f' || newGender[0] == 'M' || newGender[0] == 'm'))
-        //     {
-        //         cout << endl;
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
+                        cout << "\t\t\t\t   Error Message: Only M and F are accepted. \n\n";
 
-        //         cout << "\t\t\t\t   Error Message: Only M and F are accepted. \n\n";
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+                        system("pause");
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                        system("cls");
+                        goto newGender;
+                    }
+                    // Convert Gender to Uppercase
+                    newGender[0] = toupper(newGender[0]);
 
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
-        //         system("pause");
-        //         cin.clear();
-        //         cin.ignore(10000, '\n');
-        //         system("cls");
-        //         goto newGender;
-        //     }
-        //     // Convert Gender to Uppercase
-        //     newGender[0] = toupper(newGender[0]);
+                newDOB:
+                    cout << "\n\t\t\t\t     Date of Birth(DD MM YYYY) : ";
+                    cin.ignore();
+                    getline(cin, newDOB);
+                    // check if the date of birth entered is not digits
+                    for (char c : newDOB)
+                    {
+                        if (isalpha(c))
+                        {
+                            cout << endl;
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        // newDOB:
-        //     cout << "\n\t\t\t\t     Date of Birth(DD MM YYYY) : ";
-        //     cin.ignore();
-        //     getline(cin, newDOB);
-        //     // check if the date of birth entered is not digits
-        //     for (char c : newDOB)
-        //     {
-        //         if (isalpha(c))
-        //         {
-        //             cout << endl;
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
+                            cout << "\t\t\t\t   Error Message: Must Contain Only Digits. \n\n";
 
-        //             cout << "\t\t\t\t   Error Message: Must Contain Only Digits. \n\n";
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
+                            system("pause");
+                            system("cls");
+                            goto newDOB;
+                        }
+                    }
+                    // check if the date of birth entered is more than 10 numbers
+                    if (newDOB.length() > 10)
+                    {
+                        cout << endl;
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
-        //             system("pause");
-        //             cin.clear();
-        //             cin.ignore(10000, '\n');
-        //             system("cls");
-        //             goto newDOB;
-        //         }
-        //     }
-        //     // check if the date of birth entered is more than 10 numbers
-        //     if (newDOB.length() > 10)
-        //     {
-        //         cout << endl;
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
+                        cout << "\t\t\t\t   Error Message: Please Follow The Given Format. \n\n";
 
-        //         cout << "\t\t\t\t   Error Message: Please Follow The Given Format. \n\n";
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+                        system("pause");
+                        system("cls");
+                        goto newDOB;
+                    }
 
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
-        //         system("pause");
-        //         cin.clear();
-        //         cin.ignore(10000, '\n');
-        //         system("cls");
-        //         goto newDOB;
-        //     }
+                newOccupation:
+                    cout << "\n\t\t\t\t     Occupation : ";
+                    getline(cin, newOccupation);
+                    newOccupation[0] = toupper(newOccupation[0]);
+                    // check if the occupation entered is characters
+                    for (char c : newOccupation)
+                    {
+                        if (!isalpha(c))
+                        {
+                            cout << endl;
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        // newOccupation:
-        //     cout << "\n\t\t\t\t     Occupation : ";
-        //     getline(cin, newOccupation);
+                            cout << "\t\t\t\t   Error Message: Must Contain Only Characters. \n\n";
 
-        //     // check if the occupation entered is characters
-        //     for (char c : newOccupation)
-        //     {
-        //         if (!isalpha(c))
-        //         {
-        //             cout << endl;
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
+                            cout << "\t\t\t\t  =======================================================================================\n\n";
+                            system("pause");
+                            system("cls");
+                            goto newOccupation;
+                        }
+                    }
 
-        //             cout << "\t\t\t\t   Error Message: Must Contain Only Characters. \n\n";
+                newBalance:
+                    cout << "\n\t\t\t\t     Deposit($) : ";
+                    cin >> newBalance;
+                    // check if the deposit entered is number
+                    if (cin.fail())
+                    {
+                        cout << endl;
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //             cout << "\t\t\t\t  =======================================================================================\n\n";
-        //             system("pause");
-        //             cin.clear();
-        //             cin.ignore(10000, '\n');
-        //             system("cls");
-        //             goto newOccupation;
-        //         }
-        //     }
+                        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
-        // newBalance:
-        //     cout << "\n\t\t\t\t     Deposit($) : ";
-        //     cin >> newBalance;
-        //     // check if the deposit entered is number
-        //     if (cin.fail())
-        //     {
-        //         cout << endl;
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+                        system("pause");
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                        system("cls");
+                        goto newBalance;
+                    }
+                    // check if the deposit entered is more than 10 dollar
+                    if (newBalance < 10)
+                    {
+                        cout << endl;
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //         cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+                        cout << "\t\t\t\t   Error Message: Accept Only 10 Dollar or more. \n\n";
 
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
-        //         system("pause");
-        //         cin.clear();
-        //         cin.ignore(10000, '\n');
-        //         system("cls");
-        //         goto newBalance;
-        //     }
-        //     // check if the deposit entered is more than 10 dollar
-        //     if (newBalance < 10)
-        //     {
-        //         cout << endl;
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+                        system("pause");
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                        system("cls");
+                        goto newBalance;
+                    }
+                newPin:
+                    cout << "\n\t\t\t\t     Pin(4-digits) : ";
+                    cin >> newPin;
+                    Pin = to_string(newPin);
+                    // check if the pin entered if all digits
+                    if (cin.fail())
+                    {
+                        cout << endl;
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //         cout << "\t\t\t\t   Error Message: Accept Only 10 Dollar or more. \n\n";
+                        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
-        //         system("pause");
-        //         cin.clear();
-        //         cin.ignore(10000, '\n');
-        //         system("cls");
-        //         goto newBalance;
-        //     }
-        // newPin:
-        //     cout << "\n\t\t\t\t     Pin(4-digits) : ";
-        //     cin >> newPin;
-        //     Pin = to_string(newPin);
-        //     // check if the pin entered if all digits
-        //     if (cin.fail())
-        //     {
-        //         cout << endl;
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+                        system("pause");
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                        system("cls");
+                        goto newPin;
+                    }
+                    // check if the pin entered is a 4-digits number
+                    if (Pin.length() != 4)
+                    {
 
-        //         cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+                        cout << endl;
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
-        //         system("pause");
-        //         cin.clear();
-        //         cin.ignore(10000, '\n');
-        //         system("cls");
-        //         goto newPin;
-        //     }
-        //     // check if the pin entered is a 4-digits number
-        //     if (Pin.length() != 4)
-        //     {
+                        cout << "\t\t\t\t   Error Message: Pin Must Contain 4-digits. \n\n";
 
-        //         cout << endl;
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+                        system("pause");
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                        system("cls");
+                        goto newPin;
+                    }
+                    // divide string
+                    newBirthDate = stoi(newDOB.substr(0, 2));
+                    newBirthMonth = stoi(newDOB.substr(3, 2));
+                    newBirthYear = stoi(newDOB.substr(6, 4));
 
-        //         cout << "\t\t\t\t   Error Message: Pin Must Contain 4-digits. \n\n";
+                    newName = newFname + " " + newLname;
 
-        //         cout << "\t\t\t\t  =======================================================================================\n\n";
-        //         system("pause");
-        //         cin.clear();
-        //         cin.ignore(10000, '\n');
-        //         system("cls");
-        //         goto newPin;
-        //     }
-        //     // divide string
-        //     newBirthDate = stoi(newDOB.substr(0, 2));
-        //     newBirthMonth = stoi(newDOB.substr(3, 2));
-        //     newBirthYear = stoi(newDOB.substr(6, 4));
-        //     // write to information to Bank_Account.txt
-        //     ofstream Bank1("Bank_Account.txt", ios::app);
-        //     Bank1 << account << endl;
-        //     Bank1 << newFname << " " << newLname << endl;
-        //     Bank1 << newGender << endl;
-        //     Bank1 << newBirthDate << endl;
-        //     Bank1 << newBirthMonth << endl;
-        //     Bank1 << newBirthYear << endl;
-        //     Bank1 << newOccupation << endl;
-        //     Bank1 << newBalance << endl;
-        //     Bank1 << newPin << endl;
-        //     Bank1.close();
-        //     cout << endl;
-        //     cout << "\t\t\t\t     Account Is Edited Successfully.\n\n";
+                    tempFile << account << endl;
+                    tempFile << newName << endl;
+                    tempFile << newGender << endl;
+                    tempFile << newBirthDate << endl;
+                    tempFile << newBirthMonth << endl;
+                    tempFile << newBirthYear << endl;
+                    tempFile << newOccupation << endl;
+                    tempFile << newBalance << endl;
+                    tempFile << newPin << endl;
+                    cout << endl;
+                    cout << "\t\t\t\t     Account Is Edited Successfully.\n\n";
+                    fflush(stdin);
+                    break;
+                }
+
+                case 'N':
+                case 'n':
+                {
+                    tempFile << account << endl;
+                    tempFile << name << endl;
+                    tempFile << gender << endl;
+                    tempFile << birthDate << endl;
+                    tempFile << birthMonth << endl;
+                    tempFile << birthYear << endl;
+                    tempFile << occupation << endl;
+                    tempFile << balance << endl;
+                    tempFile << pin << endl;
+                    cout << endl;
+                    cout << "\t\t\t\t     Account Is Not Deleted.\n\n";
+                    break;
+                }
+
+                default:
+                {
+                    cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                    system("pause");
+                    system("cls");
+                    goto again;
+                    break;
+                }
+                }
+            }
+            else
+            {
+                cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                system("pause");
+                system("cls");
+                goto again;
+                break;
+            }
         }
         bank2 >> account;
         bank2.ignore();
@@ -1745,7 +1750,7 @@ void a::Admin_Edit_Account()
     tempFile.close();
     bank2.close();
     remove("Bank_Account.txt");
-    rename("temp1.txt", "Bank_Account.txt");
+    rename("temp.txt", "Bank_Account.txt");
     if (notFound)
     {
         cout << endl;
@@ -1759,6 +1764,196 @@ void a::Admin_Edit_Account()
     system("cls");
     Admin_System();
 }
+
+// function to allow to display all of customer account
+void a::Admin_Display_All_Account()
+{
+    string Account, Balance, BirthDate, BirthYear, Pin;
+    i = 0;
+    ifstream bank2("Bank_Account.txt", ios::in);
+    bank2 >> account;
+    bank2.ignore();
+    getline(bank2, name);
+    bank2 >> gender;
+    bank2 >> birthDate;
+    bank2 >> birthMonth;
+    bank2 >> birthYear;
+    bank2.ignore();
+    getline(bank2, occupation);
+    bank2 >> balance;
+    bank2 >> pin;
+
+    Account = to_string(account);
+    Balance = to_string(balance);
+    Pin = to_string(pin);
+    BirthDate = to_string(birthDate);
+    BirthYear = to_string(birthYear);
+    cout << setw(90) << right << "+  Customer Accounts  +" << setw(75) << endl
+         << endl;
+    cout << setw(175) << setfill('-') << "" << endl;
+    cout << "|" << setw(5) << setfill(' ') << "No." << setw(3) << setfill(' ');
+    cout << "|" << setw(19) << setfill(' ') << "Account Number" << setw(5);
+    cout << "|" << setw(19) << setfill(' ') << "Card Holder" << setw(8);
+    cout << "|" << setw(9) << setfill(' ') << "Gender" << setw(3);
+    cout << "|" << setw(17) << setfill(' ') << "Date Of Birth" << setw(5);
+    cout << "|" << setw(8) << setfill(' ') << "Age" << setw(5);
+    cout << "|" << setw(20) << setfill(' ') << "Occupation" << setw(12);
+    cout << "|" << setw(16) << setfill(' ') << "Balance" << setw(9);
+    cout << "|" << setw(6) << setfill(' ') << "Pin" << setw(5) << "|" << endl;
+
+    while (!bank2.eof())
+    {
+        string dob = BirthDate + " " + month[birthMonth - 1] + " " + BirthYear;
+        int space_account = 23 - Account.length();
+        int internal_account = space_account / 2;
+
+        int space_fullname = 27 - name.length();
+        int internal_fullname = space_fullname / 2;
+
+        int space_dob = 22 - dob.length();
+        int internal_dob = space_dob / 2;
+
+        int space_occupation = 32 - occupation.length();
+        int internal_occupation = space_occupation / 2;
+
+        int space_balance = 25 - Balance.length();
+        int internal_balance = space_balance / 2;
+
+        cout << setw(175) << setfill('-') << "" << endl;
+        cout << "|" << setw(4) << setfill(' ') << i + 1 << setw(4) << setfill(' ') << "|";
+        cout << setw(internal_account + Account.length()) << account << setw(24 - (internal_account + Account.length())) << "|";
+        cout << setw(internal_fullname + name.length()) << name << setw(27 - (internal_fullname + name.length())) << "|";
+        cout << setw(6) << gender << setw(6) << "|";
+        cout << setw(internal_dob + dob.length()) << dob << setw(22 - (internal_dob + dob.length())) << "|";
+        cout << setw(7) << age_conversion(birthDate, birthMonth, birthYear) << setw(6) << "|";
+        cout << setw(internal_occupation + occupation.length()) << occupation << setw(32 - (internal_occupation + occupation.length())) << "|";
+        cout << setw(internal_balance + Balance.length()) << balance << setw(25 - (internal_balance + Balance.length())) << "|";
+        cout << setw(7) << pin << setw(4) << "|";
+        cout << endl;
+        i++;
+        bank2 >> account;
+        bank2.ignore();
+        getline(bank2, name);
+        bank2 >> gender;
+        bank2 >> birthDate;
+        bank2 >> birthMonth;
+        bank2 >> birthYear;
+        bank2.ignore();
+        getline(bank2, occupation);
+        bank2 >> balance;
+        bank2 >> pin;
+    }
+    cout << setw(175) << setfill('-') << "" << endl;
+    bank2.close();
+    system("pause");
+    system("cls");
+    Admin_System();
+}
+
+// function to allow to search account of a customer
+void a::Admin_Search_Account()
+{
+    unsigned targetedAcc;
+    bool notFound = true;
+
+    cout << "\t\t\t\t  =======================================================================================\n"
+            "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
+            "\t\t\t\t  =======================================================================================\n"
+            "\n"
+            "\t\t\t\t                            : :  A D M I N _ S Y S T E M   : :                           \n"
+            "\n"
+            "\n\t\t\t\t  Enter Account Number You Want To Search: ";
+    cin >> targetedAcc;
+    string find = to_string(targetedAcc);
+
+    // check if the variable find entered is a number
+    if (cin.fail())
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Must Contain 9-Digits. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("pause");
+        system("cls");
+        Admin_Delete_Account();
+    }
+    // check if the variable find entered is 9-digits
+    if (find.length() != 9)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9-Digits. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("pause");
+        system("cls");
+        Admin_Delete_Account();
+    }
+
+    ifstream bank2("Bank_Account.txt", ios::in);
+
+    while (!bank2.eof())
+    {
+        bank2 >> account;
+        bank2.ignore();
+        getline(bank2, name);
+        bank2 >> gender;
+        bank2 >> birthDate;
+        bank2 >> birthMonth;
+        bank2 >> birthYear;
+        bank2.ignore();
+        getline(bank2, occupation);
+        bank2 >> balance;
+        bank2 >> pin;
+
+        if (targetedAcc == account)
+        {
+            notFound = false;
+
+            cout << endl;
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+
+            cout << "\t\t\t\t   Information Found: \n\n";
+            cout << "\t\t\t\t   Account Number: " << account << "\n";
+            cout << "\t\t\t\t   Card Holder:    " << name << "\n";
+            cout << "\t\t\t\t   Gender:         " << gender << "\n";
+            cout << "\t\t\t\t   Date Of Birth:  " << birthDate << " / " << month[birthMonth - 1] << " / " << birthYear << "\n";
+            cout << "\t\t\t\t   Age:            " << age_conversion(birthDate, birthMonth, birthYear) << "\n ";
+            cout << "\t\t\t\t   Occupation:     " << occupation << "\n";
+            cout << "\t\t\t\t   Balance:        $" << balance << "\n";
+            cout << "\t\t\t\t   Pin:            " << pin << "\n\n";
+
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+
+            break;
+        }
+    }
+
+    if (notFound)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   No Record Found. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+    }
+
+    bank2.close();
+
+    system("pause");
+    cin.clear();
+    cin.ignore(10000, '\n');
+    Customer_System();
+}
+
 // ***************************************************************
 //                       Customer Functions
 // ***************************************************************
