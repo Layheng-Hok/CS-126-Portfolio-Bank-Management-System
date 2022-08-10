@@ -870,7 +870,7 @@ void a::Admin_Add_Account()
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Must Contain Only Digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
@@ -1349,14 +1349,14 @@ void a::Admin_Edit_Account()
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Must Contain 9-Digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         cin.clear();
         cin.ignore(10000, '\n');
         system("pause");
         system("cls");
-        Admin_Delete_Account();
+        Admin_Edit_Account();
     }
     // check if the variable find entered is 9-digits
     if (Find.length() != 9)
@@ -1371,7 +1371,7 @@ void a::Admin_Edit_Account()
         cin.ignore(10000, '\n');
         system("pause");
         system("cls");
-        Admin_Delete_Account();
+        Admin_Edit_Account();
     }
 
     ifstream bank2("Bank_Account.txt", ios::in);
