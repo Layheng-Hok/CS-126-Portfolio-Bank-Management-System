@@ -44,8 +44,9 @@ void Customer_System();                             // function to display all t
 class a
 {
 protected:
+    string account;
     string fname, lname, name, DOB, gender, occupation;
-    int account, age, birthDate, birthMonth, birthYear, pin;
+    int age, birthDate, birthMonth, birthYear, pin;
     float balance, deposit;
     string month[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     int i = 0;
@@ -844,7 +845,7 @@ void Admin_System()
 // function to allow to add account of a customer
 void a::Admin_Add_Account()
 {
-    string acc;
+    bool isInt;
     string Pin;
     cout << "\t\t\t\t  =======================================================================================\n"
             "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
@@ -854,8 +855,35 @@ void a::Admin_Add_Account()
             "\n";
     cout << "\t\t\t\t  Enter The Following Information\n";
     cout << "\n\t\t\t\t     Account Number(9-digits) : ";
-    cin >> account;
-    acc = to_string(account);
+    getline(cin, account);
+
+    // check if the account number entered is not digits
+    for (char c : account)
+    {
+        if (c >= '0' && c <= '9')
+        {
+            isInt = true;
+            continue;
+        }
+        else
+        {
+            isInt = false;
+            break;
+        }
+    }
+
+    if (!isInt)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        Admin_Add_Account();
+    }
 
     // check if the account number entered is positive integer
     if (account < 0)
@@ -864,19 +892,6 @@ void a::Admin_Add_Account()
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
         cout << "\t\t\t\t   Error Message: Account Number Must Be A 9-digits Positive Integer. \n\n";
-
-        cout << "\t\t\t\t  =======================================================================================\n\n";
-        system("pause");
-        system("cls");
-        Admin_Add_Account();
-    }
-    // check if the account number entered is not digits
-    if (cin.fail())
-    {
-        cout << endl;
-        cout << "\t\t\t\t  =======================================================================================\n\n";
-
-        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
@@ -1176,7 +1191,7 @@ pin:
     birthYear = stoi(DOB.substr(6, 4));
     // write to information to Bank_Account.txt
     ofstream bank1("Bank_Account.txt", ios::app);
-    bank1 << acc << endl;
+    bank1 << account << endl;
     bank1 << fname << " " << lname << endl;
     bank1 << gender << endl;
     bank1 << birthDate << endl;
@@ -1198,9 +1213,11 @@ pin:
 // function to allow to delete account of a customer
 void a::Admin_Delete_Account()
 {
+    bool isInt;
     bool notFound = true;
     int find;
     string Find;
+
     cout << "\t\t\t\t  =======================================================================================\n"
             "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
             "\t\t\t\t  =======================================================================================\n"
@@ -1208,8 +1225,39 @@ void a::Admin_Delete_Account()
             "\t\t\t\t                            : :  A D M I N _ S Y S T E M   : :                           \n"
             "\n";
     cout << "\t\t\t\t  Enter Account Number You Want To Delete : ";
-    cin >> find;
-    Find = to_string(find);
+    cin >> Find;
+
+    // check if the account number entered is not digits
+    for (char c : Find)
+    {
+        if (c >= '0' && c <= '9')
+        {
+            isInt = true;
+            continue;
+        }
+        else
+        {
+            isInt = false;
+            break;
+        }
+    }
+
+    if (!isInt)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("pause");
+        system("cls");
+        Admin_Delete_Account();
+    }
+
+    find = stoi(Find);
 
     // check if the find entered is a negative number
     if (find < 0)
@@ -1227,21 +1275,6 @@ void a::Admin_Delete_Account()
         Admin_Delete_Account();
     }
 
-    // check if the variable find entered is a number
-    if (cin.fail())
-    {
-        cout << endl;
-        cout << "\t\t\t\t  =======================================================================================\n\n";
-
-        cout << "\t\t\t\t   Error Message: Must Contain 9-Digits. \n\n";
-
-        cout << "\t\t\t\t  =======================================================================================\n\n";
-        cin.clear();
-        cin.ignore(10000, '\n');
-        system("pause");
-        system("cls");
-        Admin_Delete_Account();
-    }
     // check if the variable find entered is 9-digits
     if (Find.length() != 9)
     {
@@ -1394,6 +1427,7 @@ void a::Admin_Delete_Account()
 // function to allow to edit account of a customer
 void a::Admin_Edit_Account()
 {
+    bool isInt;
     string newFname, newLname, newName, newDOB, newGender, newOccupation;
     int newBalance, newBirthDate, newBirthMonth, newBirthYear, newPin;
     bool notFound = true;
@@ -1407,8 +1441,39 @@ void a::Admin_Edit_Account()
             "\t\t\t\t                            : :  A D M I N _ S Y S T E M   : :                           \n"
             "\n";
     cout << "\t\t\t\t  Enter Account Number You Want To Edit: ";
-    cin >> find;
-    Find = to_string(find);
+    cin >> Find;
+
+    // check if variable find entered is not digits
+    for (char c : Find)
+    {
+        if (c >= '0' && c <= '9')
+        {
+            isInt = true;
+            continue;
+        }
+        else
+        {
+            isInt = false;
+            break;
+        }
+    }
+
+    if (!isInt)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("pause");
+        system("cls");
+        Admin_Edit_Account();
+    }
+
+    find = stoi(Find);
 
     // check if the variable find entered is positive integer
     if (find < 0)
@@ -1426,21 +1491,6 @@ void a::Admin_Edit_Account()
         Admin_Edit_Account();
     }
 
-    // check if the variable find entered is a number
-    if (cin.fail())
-    {
-        cout << endl;
-        cout << "\t\t\t\t  =======================================================================================\n\n";
-
-        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
-
-        cout << "\t\t\t\t  =======================================================================================\n\n";
-        cin.clear();
-        cin.ignore(10000, '\n');
-        system("pause");
-        system("cls");
-        Admin_Edit_Account();
-    }
     // check if the variable find entered is 9-digits
     if (Find.length() != 9)
     {
