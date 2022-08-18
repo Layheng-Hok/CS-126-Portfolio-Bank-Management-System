@@ -1066,7 +1066,7 @@ occupation:
     // check if the inputted occupation is alphabetic
     for (char c : occupation)
     {
-        if (!isalpha(c))
+        if (!isalpha(c) || !isspace(c))
         {
             cout << endl;
             cout << "\t\t\t\t  =======================================================================================\n\n";
@@ -3012,7 +3012,6 @@ void a::Customer_Make_Transaction()
                     cout << "\n\t\t\t\t  Enter 'Y' To Confirm, 'N' To Cancel Your Transaction.";
                     cout << "\n\t\t\t\t  Your Selection: ";
                     getline(cin, validation);
-                    system("cls");
 
                     if (validation.length() == 1)
                     {
@@ -3022,12 +3021,16 @@ void a::Customer_Make_Transaction()
                         {
                         case 'Y':
                         case 'y':
+                            system("cls");
                             Customer_PIN_Verification(fromAcc);
                             goto proceed;
                             break;
 
                         case 'N':
                         case 'n':
+                            cout << "\n\t\t\t\t  Transaction Cancelled.\n\n";
+                            system("pause");
+                            system("cls");
                             Customer_System();
                             break;
 
