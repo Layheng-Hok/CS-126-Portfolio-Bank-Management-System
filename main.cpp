@@ -3,7 +3,7 @@
 // ***************************************************************
 
 /*
-   Bank Management System is a program intended for two types of user,
+   Bank Management System is a program intended for two types of users,
    which are the admins and the customers of a bank company.
 
    Admins and customers have different privileges, and they have to
@@ -40,7 +40,7 @@ void Customer_Delete();                             // function to delete a cust
 void Customer_Verification(string targetedInfo);    // function to verify a customer's identity before deleting their account
 void Customer_System();                             // function to display all the privileges that a customer has on the program
 
-//
+// class to store information and all operations on customers
 class a
 {
 protected:
@@ -54,11 +54,11 @@ public:
     int age_conversion(int bd, int bm, int by); // function to convert birthday into age
 
     // admin functions
-    void Admin_Add_Account();
-    void Admin_Delete_Account();
-    void Admin_Edit_Account();
-    void Admin_Display_All_Accounts();
-    void Admin_Search_Account();
+    void Admin_Add_Account();          // function for an admin to log in if they have already had an account
+    void Admin_Delete_Account();       // function to delete a customer's account
+    void Admin_Edit_Account();         // function to edit a customer's account
+    void Admin_Display_All_Accounts(); // function to display all of customer accounts
+    void Admin_Search_Account();       // function to search for a customer account
 
     // customer functions
     void Customer_View_Details();                                        // function for a customer to display their own account details
@@ -841,7 +841,7 @@ void Admin_System()
     } while (true);
 }
 
-// function to allow to add account of a customer
+// function to add a new customer's account
 void a::Admin_Add_Account()
 {
     string acc;
@@ -853,24 +853,24 @@ void a::Admin_Add_Account()
             "\t\t\t\t                            : :  A D M I N _ S Y S T E M   : :                           \n"
             "\n";
     cout << "\t\t\t\t  Enter The Following Information\n";
-    cout << "\n\t\t\t\t     Account Number(9-digits) : ";
+    cout << "\n\t\t\t\t     Account Number (9 Digits): ";
     cin >> account;
     acc = to_string(account);
 
-    // check if the account number entered is positive integer
+    // check if the inputted account number is a positive integer
     if (account < 0)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Account Number Must Be A 9-digits Positive Integer. \n\n";
+        cout << "\t\t\t\t   Error Message: Account Number Must Be A 9-digit Positive Integer. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
         system("cls");
         Admin_Add_Account();
     }
-    // check if the account number entered is not digits
+    // check if the inputted account number is not an integer
     if (cin.fail())
     {
         cout << endl;
@@ -884,13 +884,13 @@ void a::Admin_Add_Account()
         Admin_Add_Account();
     }
 
-    // check if the account number already existed
+    // check if the account number already exists
     if (Customer_Account_Validation(account))
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: This Account Number Is Already Existed. \n\n"
+        cout << "\t\t\t\t   Error Message: Account Number ALready Exists. \n\n"
                 "\t\t\t\t   Please Try Another One.                                \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
@@ -899,23 +899,25 @@ void a::Admin_Add_Account()
         Admin_Add_Account();
     }
 
-    // check if the account number entered is 9-digits
+    // check if the inputted account number is 9-digit
     if (acc.length() != 9)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9-digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9 digits. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
         system("cls");
         Admin_Add_Account();
     }
+
 fname:
-    cout << "\n\t\t\t\t     First Name : ";
+    cout << "\n\t\t\t\t     First Name: ";
     getline(cin, fname);
-    // Covert the first letter of first name to uppercase
+
+    // convert the first letter of the first name to uppercase
     fname[0] = toupper(fname[0]);
 
     for (char c : fname)
@@ -926,14 +928,14 @@ fname:
             cout << endl;
             cout << "\t\t\t\t  =======================================================================================\n\n";
 
-            cout << "\t\t\t\t   Error Message: First Name Must Not Contain Space. \n\n";
+            cout << "\t\t\t\t   Error Message: First Name Must Not Contain Space(s). \n\n";
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
             system("cls");
             goto fname;
         }
-        // check if it's not a character
+        // check if it is not a character
         if (!isalpha(c))
         {
             cout << endl;
@@ -947,10 +949,12 @@ fname:
             goto fname;
         }
     }
+
 lname:
-    cout << "\n\t\t\t\t     Last Name : ";
+    cout << "\n\t\t\t\t     Last Name: ";
     getline(cin, lname);
-    // Covert the first letter of last name to uppercase
+
+    // convert the first letter of last name to uppercase
     lname[0] = toupper(lname[0]);
 
     for (char c : lname)
@@ -961,14 +965,14 @@ lname:
             cout << endl;
             cout << "\t\t\t\t  =======================================================================================\n\n";
 
-            cout << "\t\t\t\t   Error Message: Last Name Must Not Contain Space. \n\n";
+            cout << "\t\t\t\t   Error Message: Last Name Must Not Contain Space(s). \n\n";
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
             system("cls");
             goto lname;
         }
-        // check if it's not a character
+        // check if it is not a character
         if (!isalpha(c))
         {
             cout << endl;
@@ -982,16 +986,17 @@ lname:
             goto lname;
         }
     }
+
 gender:
-    cout << "\n\t\t\t\t     Gender(M or F) : ";
+    cout << "\n\t\t\t\t     Gender (M or F): ";
     cin >> gender;
-    //  check if the gender is not 1 character
+    //  check if the gender is not one character
     if (gender.length() != 1)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Only M and F are accepted. \n\n";
+        cout << "\t\t\t\t   Error Message: Gender Must Be Either M or F. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
@@ -1000,13 +1005,13 @@ gender:
         system("cls");
         goto gender;
     }
-    // check if the gender entered is not F or M then display the erro message
+    // check if the inputted gender is neither M nor F
     if (!(gender[0] == 'F' || gender[0] == 'f' || gender[0] == 'M' || gender[0] == 'm'))
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Only M and F are accepted. \n\n";
+        cout << "\t\t\t\t   Error Message: Gender Must Be Either M or F.  \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
@@ -1015,14 +1020,15 @@ gender:
         system("cls");
         goto gender;
     }
-    // Convert Gender to Uppercase
+    // convert gender to uppercase
     gender[0] = toupper(gender[0]);
 
 DOB:
-    cout << "\n\t\t\t\t     Date of Birth(DD MM YYYY) : ";
+    cout << "\n\t\t\t\t     Date of Birth (DD MM YYYY): ";
     cin.ignore();
     getline(cin, DOB);
-    // check if the date of birth entered is not digits
+
+    // check if the inputted date of birth is not a number
     for (char c : DOB)
     {
         if (isalpha(c))
@@ -1030,7 +1036,7 @@ DOB:
             cout << endl;
             cout << "\t\t\t\t  =======================================================================================\n\n";
 
-            cout << "\t\t\t\t   Error Message: Must Contain Only Digits. \n\n";
+            cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
@@ -1038,7 +1044,7 @@ DOB:
             goto DOB;
         }
     }
-    // check if the date of birth entered is more than 10 numbers
+    // check if the inputted date of birth is more than ten characters
     if (DOB.length() > 10)
     {
         cout << endl;
@@ -1053,10 +1059,11 @@ DOB:
     }
 
 occupation:
-    cout << "\n\t\t\t\t     Occupation : ";
+    cout << "\n\t\t\t\t     Occupation: ";
     getline(cin, occupation);
     occupation[0] = toupper(occupation[0]);
-    // check if the occupation entered is characters
+
+    // check if the inputted occupation is alphabetic
     for (char c : occupation)
     {
         if (!isalpha(c))
@@ -1064,7 +1071,7 @@ occupation:
             cout << endl;
             cout << "\t\t\t\t  =======================================================================================\n\n";
 
-            cout << "\t\t\t\t   Error Message: Must Contain Only Characters. \n\n";
+            cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
             cout << "\t\t\t\t  =======================================================================================\n\n";
             system("pause");
@@ -1076,7 +1083,8 @@ occupation:
 deposit:
     cout << "\n\t\t\t\t     Deposit($) : ";
     cin >> deposit;
-    // check if the deposit entered is positive integer
+
+    // check if the inputted deposit is a positive integer
     if (deposit < 0)
     {
         cout << endl;
@@ -1090,7 +1098,7 @@ deposit:
         goto deposit;
     }
 
-    // check if the deposit entered is number
+    // check if the inputted deposit is number
     if (cin.fail())
     {
         cout << endl;
@@ -1105,13 +1113,13 @@ deposit:
         system("cls");
         goto deposit;
     }
-    // check if the deposit entered is more than 10 dollar
+    // check if the inputted deposit is more than 10 dollar
     if (deposit < 10)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Accept Only 10 Dollar or more. \n\n";
+        cout << "\t\t\t\t   Error Message: The Deposit Amount Must Not Be Less Than 10 Dollar. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
@@ -1120,18 +1128,19 @@ deposit:
         system("cls");
         goto deposit;
     }
+
 pin:
-    cout << "\n\t\t\t\t     Pin(4-digits) : ";
+    cout << "\n\t\t\t\t     Pin (4 digits): ";
     cin >> pin;
     Pin = to_string(pin);
 
-    // check if the pin entered is positive integer
+    // check if the inputted pin is a positive integer
     if (pin < 0)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Pin Must Be A 4-digits Positive Integer. \n\n";
+        cout << "\t\t\t\t   Error Message: Pin Must Be A 4-digit Positive Integer. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
@@ -1139,7 +1148,7 @@ pin:
         goto pin;
     }
 
-    // check if the pin entered if all digits
+    // check if the inputted are all numbers
     if (cin.fail())
     {
         cout << endl;
@@ -1154,14 +1163,14 @@ pin:
         system("cls");
         goto pin;
     }
-    // check if the pin entered is a 4-digits number
+    // check if the inputted pin is a 4-digit number
     if (Pin.length() != 4)
     {
 
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Pin Must Contain 4-digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Pin Must Contain 4 digits. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
@@ -1170,10 +1179,12 @@ pin:
         system("cls");
         goto pin;
     }
+
     // divide string
     birthDate = stoi(DOB.substr(0, 2));
     birthMonth = stoi(DOB.substr(3, 2));
     birthYear = stoi(DOB.substr(6, 4));
+
     // write to information to Bank_Account.txt
     ofstream bank1("Bank_Account.txt", ios::app);
     bank1 << acc << endl;
@@ -1195,7 +1206,7 @@ pin:
     Admin_System();
 }
 
-// function to allow to delete account of a customer
+// function to delete a customer's account
 void a::Admin_Delete_Account()
 {
     bool notFound = true;
@@ -1211,13 +1222,13 @@ void a::Admin_Delete_Account()
     cin >> find;
     Find = to_string(find);
 
-    // check if the find entered is a negative number
+    // check if the inputted find is a negative number
     if (find < 0)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9-Digits Positive Integer. \n\n";
+        cout << "\t\t\t\t   Error Message: Account Number Must Be A 9-digit Positive Integer. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         cin.clear();
@@ -1227,13 +1238,13 @@ void a::Admin_Delete_Account()
         Admin_Delete_Account();
     }
 
-    // check if the variable find entered is a number
+    // check if the inputted find is a number
     if (cin.fail())
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Must Contain 9-Digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         cin.clear();
@@ -1242,13 +1253,14 @@ void a::Admin_Delete_Account()
         system("cls");
         Admin_Delete_Account();
     }
-    // check if the variable find entered is 9-digits
+
+    // check if the inputted find is 9-digit
     if (Find.length() != 9)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9-Digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9 digits. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         cin.clear();
@@ -1306,7 +1318,7 @@ void a::Admin_Delete_Account()
             cin.ignore();
         again:
             cin.clear();
-            cout << "\t\t\t\t     Do You Want To Delete The Account Number '" << account << "'?\n\n";
+            cout << "\t\t\t\t     Do You Want To Delete This Account Number '" << account << "'?\n\n";
 
             cout << "\t\t\t\t     Enter 'Y' To Confirm, 'N' To Cancel.\n";
             cout << "\t\t\t\t     Your Selection: ";
@@ -1391,7 +1403,7 @@ void a::Admin_Delete_Account()
     Admin_System();
 }
 
-// function to allow to edit account of a customer
+// function to edit a customer's account
 void a::Admin_Edit_Account()
 {
     string newFname, newLname, newName, newDOB, newGender, newOccupation;
@@ -1410,13 +1422,13 @@ void a::Admin_Edit_Account()
     cin >> find;
     Find = to_string(find);
 
-    // check if the variable find entered is positive integer
+    // check if the inputted find is a positive integer
     if (find < 0)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Account Number Must Be 9-digits Positive Integer. \n\n";
+        cout << "\t\t\t\t   Error Message: Account Number Must Be A 9-digit Positive Integer. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         cin.clear();
@@ -1426,7 +1438,7 @@ void a::Admin_Edit_Account()
         Admin_Edit_Account();
     }
 
-    // check if the variable find entered is a number
+    // check if the inputted find is a number
     if (cin.fail())
     {
         cout << endl;
@@ -1441,13 +1453,13 @@ void a::Admin_Edit_Account()
         system("cls");
         Admin_Edit_Account();
     }
-    // check if the variable find entered is 9-digits
+    // check if the inputted find is 9-digit
     if (Find.length() != 9)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9-Digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9 Digits. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         cin.clear();
@@ -1473,7 +1485,7 @@ void a::Admin_Edit_Account()
 
     while (!bank2.eof())
     {
-        // if account is not equal to find then write those info in file Bank_Account.txt
+        // if account is not equal to find, write data in Bank_Account.txt
         if (account != find)
         {
             tempFile << account << endl;
@@ -1486,7 +1498,7 @@ void a::Admin_Edit_Account()
             tempFile << balance << endl;
             tempFile << pin << endl;
         }
-        // if account is equal to find then display those info and allow user to enter new info
+        // if account is equal to find, display the info and allow user to enter new info
         else
         {
             notFound = false;
@@ -1511,7 +1523,6 @@ void a::Admin_Edit_Account()
 
             cout << "\t\t\t\t     Enter 'Y' To Confirm, 'N' To Cancel.\n";
             cout << "\t\t\t\t     Your Selection: ";
-            // cin.ignore();
             getline(cin, validation);
             if (validation.length() == 1)
             {
@@ -1534,10 +1545,10 @@ void a::Admin_Edit_Account()
                 newFname:
                     cout << "\n\t\t\t\t     New First Name : ";
                     getline(cin, newFname);
-                    // Covert the first letter of first name to uppercase
-                    newFname[0] = toupper(newFname[0]);
+                    // convert the first letter of the first name to uppercase
+                    fname[0] = toupper(fname[0]);
 
-                    for (char c : newFname)
+                    for (char c : fname)
                     {
                         // check if there is any space
                         if (isspace(c))
@@ -1545,14 +1556,14 @@ void a::Admin_Edit_Account()
                             cout << endl;
                             cout << "\t\t\t\t  =======================================================================================\n\n";
 
-                            cout << "\t\t\t\t   Error Message: First Name Must Not Contain Space. \n\n";
+                            cout << "\t\t\t\t   Error Message: First Name Must Not Contain Space(s). \n\n";
 
                             cout << "\t\t\t\t  =======================================================================================\n\n";
                             system("pause");
                             system("cls");
                             goto newFname;
                         }
-                        // check if it's not a character
+                        // check if it is not a character
                         if (!isalpha(c))
                         {
                             cout << endl;
@@ -1879,7 +1890,7 @@ void a::Admin_Edit_Account()
     Admin_System();
 }
 
-// function to allow to display all of customer account
+// function to display all of customer accounts
 void a::Admin_Display_All_Accounts()
 {
     string Account, Balance, BirthDate, BirthYear, Pin;
@@ -1897,12 +1908,7 @@ void a::Admin_Display_All_Accounts()
     bank2 >> balance;
     bank2 >> pin;
 
-    Account = to_string(account);
-    Balance = to_string(balance);
-    Pin = to_string(pin);
-    BirthDate = to_string(birthDate);
-    BirthYear = to_string(birthYear);
-    cout << setw(90) << right << "+  Customer Accounts  +" << setw(75) << endl
+    cout << setw(90) << setfill(' ') << "+  Customer Accounts  +" << setw(75) << endl
          << endl;
     cout << setw(175) << setfill('-') << "" << endl;
     cout << "|" << setw(5) << setfill(' ') << "No." << setw(3) << setfill(' ');
@@ -1917,6 +1923,11 @@ void a::Admin_Display_All_Accounts()
 
     while (!bank2.eof())
     {
+        Account = to_string(account);
+        Balance = to_string(balance);
+        Pin = to_string(pin);
+        BirthDate = to_string(birthDate);
+        BirthYear = to_string(birthYear);
         string dob = BirthDate + " " + month[birthMonth - 1] + " " + BirthYear;
         int space_account = 23 - Account.length();
         int internal_account = space_account / 2;
@@ -1941,10 +1952,11 @@ void a::Admin_Display_All_Accounts()
         cout << setw(internal_dob + dob.length()) << dob << setw(22 - (internal_dob + dob.length())) << "|";
         cout << setw(7) << age_conversion(birthDate, birthMonth, birthYear) << setw(6) << "|";
         cout << setw(internal_occupation + occupation.length()) << occupation << setw(32 - (internal_occupation + occupation.length())) << "|";
-        cout << setw(internal_balance + Balance.length()) << balance << setw(25 - (internal_balance + Balance.length())) << "|";
+        cout << setw(internal_balance + Balance.length() - 2) << fixed << setprecision(2) << balance << setw(27 - (internal_balance + Balance.length())) << "|";
         cout << setw(7) << pin << setw(4) << "|";
         cout << endl;
         i++;
+
         bank2 >> account;
         bank2.ignore();
         getline(bank2, name);
@@ -1964,10 +1976,10 @@ void a::Admin_Display_All_Accounts()
     Admin_System();
 }
 
-// function to allow to search account of a customer
+// function to search for a customer account
 void a::Admin_Search_Account()
 {
-    int targetedAcc;
+    int targettedAcc;
     bool notFound = true;
 
     cout << "\t\t\t\t  =======================================================================================\n"
@@ -1977,38 +1989,55 @@ void a::Admin_Search_Account()
             "\t\t\t\t                            : :  A D M I N _ S Y S T E M   : :                           \n"
             "\n"
             "\n\t\t\t\t  Enter Account Number You Want To Search: ";
-    cin >> targetedAcc;
-    string find = to_string(targetedAcc);
+    cin >> targettedAcc;
+    string find = to_string(targettedAcc);
 
-    // check if the variable find entered is a number
+    // check if the inputted find is a negative number
+    if (targettedAcc < 0)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Account Number Must Be A 9-digit Positive Integer. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("pause");
+        system("cls");
+        Admin_Search_Account();
+    }
+
+    // check if the inputted find is a number
     if (cin.fail())
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Must Contain 9-Digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         cin.clear();
         cin.ignore(10000, '\n');
         system("pause");
         system("cls");
-        Admin_Delete_Account();
+        Admin_Search_Account();
     }
-    // check if the variable find entered is 9-digits
+
+    // check if the inputted find is 9-digit
     if (find.length() != 9)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9-Digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9 digits. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         cin.clear();
         cin.ignore(10000, '\n');
         system("pause");
         system("cls");
-        Admin_Delete_Account();
+        Admin_Search_Account();
     }
 
     ifstream bank2("Bank_Account.txt", ios::in);
@@ -2027,7 +2056,7 @@ void a::Admin_Search_Account()
         bank2 >> balance;
         bank2 >> pin;
 
-        if (targetedAcc == account)
+        if (targettedAcc == account)
         {
             notFound = false;
 
@@ -3532,15 +3561,18 @@ void a::Customer_Transaction_History()
     int targetedAcc;
     bool notFound = true;
     int accTransferred, accReceived;
-    string fromAcc, fromName, toAcc, toName, amountTransfer, date;
+    float amountTransferred;
+    string fromAcc, fromName, AmountTransferred, toAcc, toName, date;
+    int i = 0;
 
-    cout << "\t\t\t\t  =======================================================================================\n"
-            "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
-            "\t\t\t\t  =======================================================================================\n"
-            "\n"
-            "\t\t\t\t                          : :  C U S T O M E R _ S Y S T E M   : :                       \n"
-            "\n"
-            "\n\t\t\t\t  Enter Your Account Number: ";
+    cout
+        << "\t\t\t\t  =======================================================================================\n"
+           "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
+           "\t\t\t\t  =======================================================================================\n"
+           "\n"
+           "\t\t\t\t                          : :  C U S T O M E R _ S Y S T E M   : :                       \n"
+           "\n"
+           "\n\t\t\t\t  Enter Your Account Number: ";
     cin >> targetedAcc;
 
     // check if the account number entered is positive integer
@@ -3594,17 +3626,14 @@ void a::Customer_Transaction_History()
     bank1 >> accReceived;
     bank1.ignore();
     getline(bank1, toName);
-    bank1.ignore();
-    getline(bank1, amountTransfer);
+    bank1 >> amountTransferred;
     bank1.ignore();
     getline(bank1, date);
 
-    fromAcc = to_string(accTransferred);
-    toAcc = to_string(accReceived);
-
+    cout << endl;
     cout << setw(90) << right << "+  Your Transaction History  +" << setw(75) << endl
          << endl;
-    cout << setw(168) << setfill('-') << "" << endl;
+    cout << setw(171) << setfill('-') << "" << endl;
     cout << "|" << setw(5) << setfill(' ') << "No." << setw(3) << setfill(' ');
     cout << "|" << setw(33) << setfill(' ') << "Account Transferred" << setw(14);
     cout << "|" << setw(33) << setfill(' ') << "Account Received" << setw(17);
@@ -3613,10 +3642,35 @@ void a::Customer_Transaction_History()
 
     while (!bank1.eof())
     {
+        fromName = '(' + fromName + ')';
+        toName = '(' + toName + ')';
+        fromAcc = to_string(accTransferred) + ' ' + fromName;
+        toAcc = to_string(accReceived) + ' ' + toName;
+
+        int space_fromAcc = 47 - fromAcc.length();
+        int internal_fromAcc = space_fromAcc / 2;
+
+        int space_toAcc = 50 - toAcc.length();
+        int internal_toAcc = space_toAcc / 2;
+
+        int space_date = 45 - date.length();
+        int internal_date = space_date / 2;
+
+        int space_amount = 20 - AmountTransferred.length();
+        int internal_amount = space_amount / 2;
 
         if (targetedAcc == accTransferred || targetedAcc == accReceived)
         {
             notFound = false;
+
+            cout << setw(171) << setfill('-') << "" << endl;
+            cout << "|" << setw(4) << setfill(' ') << i + 1 << setw(4) << setfill(' ') << "|";
+            cout << setw(internal_fromAcc + fromAcc.length()) << fromAcc << setw(47 - (internal_fromAcc + fromAcc.length())) << "|";
+            cout << setw(internal_toAcc + toAcc.length()) << toAcc << setw(50 - (internal_toAcc + toAcc.length())) << "|";
+            cout << setw(internal_date + date.length()) << date << setw(45 - (internal_date + date.length())) << "|";
+            cout << setw(internal_amount + AmountTransferred.length() + 3) << fixed << setprecision(2) << amountTransferred << setw(17 - (internal_amount + AmountTransferred.length())) << "|";
+            cout << endl;
+            i++;
         }
 
         bank1 >> accTransferred;
@@ -3625,12 +3679,11 @@ void a::Customer_Transaction_History()
         bank1 >> accReceived;
         bank1.ignore();
         getline(bank1, toName);
-        bank1.ignore();
-        getline(bank1, amountTransfer);
+        bank1 >> amountTransferred;
         bank1.ignore();
         getline(bank1, date);
     }
-
+    cout << setw(171) << setfill('-') << "" << endl;
     if (notFound)
     {
         cout << endl;

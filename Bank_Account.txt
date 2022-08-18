@@ -1,45 +1,19 @@
-111111111
+100100101
 Lyyou Heng
 F
 2
 2
 2005
 Data Scientist
-2150
+6500
 2607
-222222222
+100100102
 Layheng Hok
 M
 12
 4
 2003
-Senior Software Engineer
-240
-2607
-333333333
-L Lawliet
-M
-11
-12
-1999
-Detector
-10
-2699
-444444444
-Hatake Kakashi
-M
-30
-12
-1977
-Ninja
-2500
-5252
-000000001
-Lyyou Heng
-F
-2
-2
-2005
-Student
-20
-1111
+Software Engineer
+5000
+2022
+
