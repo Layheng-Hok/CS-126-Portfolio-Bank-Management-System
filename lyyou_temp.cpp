@@ -49,7 +49,7 @@ protected:
     int i = 0;
 
 public:
-    int age_conversion(int bd, int bm, int by);
+    int age_conversion(int bd, int bm, int by); // function to convert birthday into age
 
     // admin functions
     void Admin_Add_Account();
@@ -59,12 +59,13 @@ public:
     void Admin_Search_Account();
 
     // customer functions
-    void View_Details();                               // function for a customer to display their own account details
-    void Make_Transaction();                           // function for a customer to transfer money to a different account
-    bool Account_Validation(unsigned int targetedAcc); // function to check if an account exists
-    bool Balance_Validation(long balance);             // function to check a user's balance before making a transaction
+    void Customer_View_Details();                                               // function for a customer to display their own account details
+    void Customer_Make_Transaction();                                           // function for a customer to transfer money to a different account
+    bool Account_Validation(unsigned int targetedAcc);                          // function to check if an account exists
+    bool Balance_Validation(unsigned int fromAcc, unsigned int amountTransfer); // function to check a user's balance before making a transaction
 } obj;
 
+// function to convert birthday into age
 int a::age_conversion(int bd, int bm, int by)
 {
     int age;
@@ -2592,11 +2593,11 @@ void Customer_System()
             switch (choice)
             {
             case '1':
-                obj.View_Details();
+                obj.Customer_View_Details();
                 break;
 
             case '2':
-                obj.Make_Transaction();
+                obj.Customer_Make_Transaction();
                 break;
 
             case '3':
@@ -2626,7 +2627,7 @@ void Customer_System()
 }
 
 // function for a customer to display their own account details
-void a::View_Details()
+void a::Customer_View_Details()
 {
     unsigned targetedAcc;
     bool notFound = true;
@@ -2697,9 +2698,9 @@ void a::View_Details()
 }
 
 // function for a customer to transfer money to a different account
-void a::Make_Transaction()
+void a::Customer_Make_Transaction()
 {
-    long fromAcc, toAcc, amountTransfer, amountUSER1, amountUSER2;
+    unsigned int fromAcc, toAcc, amountTransfer, amountUSER1, amountUSER2;
 
     cout << "\t\t\t\t  =======================================================================================\n"
             "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
@@ -2724,7 +2725,7 @@ void a::Make_Transaction()
         cin.clear();
         cin.ignore(10000, '\n');
         system("cls");
-        Make_Transaction();
+        Customer_Make_Transaction();
     }
 
     if (Account_Validation(fromAcc))
@@ -2750,7 +2751,7 @@ void a::Make_Transaction()
         if (Account_Validation(toAcc))
         {
         back2:
-            cout << "\t\t\t\t     Enter The Transferred Amount ($): ";
+            cout << "\t\t\t\t     Enter The Amount You Want To Transfer ($): ";
             cin >> amountTransfer;
 
             if (cin.fail())
@@ -2767,6 +2768,59 @@ void a::Make_Transaction()
                 cin.ignore(10000, '\n');
                 system("cls");
                 goto back2;
+            }
+
+            if (Balance_Validation(fromAcc, amountTransfer))
+            {
+            }
+            else
+            {
+                cout << endl;
+                cout << "\t\t\t\t  =======================================================================================\n\n";
+
+                cout << "\t\t\t\t   You Do Not Have Enough Balance To Make This Transaction. \n\n";
+                cout << "\t\t\t\t   Please Reenter The Amount. \n\n";
+
+                cout << "\t\t\t\t  =======================================================================================\n\n";
+
+                do
+                {
+                    cout << "\n\t\t\t\t  Enter 'Y' To Try Again, 'N' To Go Back To Customer Menu.";
+                    cout << "\n\t\t\t\t  Your Selection: ";
+                    getline(cin, validation);
+                    system("cls");
+
+                    if (validation.length() == 1)
+                    {
+                        choice = validation[0];
+
+                        switch (choice)
+                        {
+                        case 'Y':
+                        case 'y':
+                            goto back1;
+                            break;
+
+                        case 'N':
+                        case 'n':
+                            Customer_System();
+                            break;
+
+                        default:
+                            cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                            system("pause");
+                            system("cls");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                        system("pause");
+                        system("cls");
+                    }
+
+                } while (true);
             }
         }
         else
@@ -2799,7 +2853,7 @@ void a::Make_Transaction()
 
                     case 'N':
                     case 'n':
-                        Customer_Login_Menu();
+                        Customer_System();
                         break;
 
                     default:
@@ -2844,12 +2898,12 @@ void a::Make_Transaction()
                 {
                 case 'Y':
                 case 'y':
-                    Make_Transaction();
+                    Customer_Make_Transaction();
                     break;
 
                 case 'N':
                 case 'n':
-                    Customer_Login_Menu();
+                    Customer_System();
                     break;
 
                 default:
@@ -2909,7 +2963,42 @@ bool a::Account_Validation(unsigned int targetedAcc)
 }
 
 // function to check a user's balance before making a transaction
-bool Balance_Validation(long balance)
+bool a::Balance_Validation(unsigned int fromAcc, unsigned int amountTransfer)
 {
-    return 0;
+    bool validBalance = false;
+
+    ifstream bank2("Bank_Account.txt", ios::in);
+
+    if (bank2.is_open())
+    {
+        while (!bank2.eof())
+        {
+            bank2 >> account;
+            bank2.ignore();
+            getline(bank2, name);
+            bank2 >> gender;
+            bank2 >> birthDate;
+            bank2 >> birthMonth;
+            bank2 >> birthYear;
+            bank2.ignore();
+            getline(bank2, occupation);
+            bank2 >> balance;
+            bank2 >> pin;
+
+            if (fromAcc == account)
+            {
+                if (amountTransfer <= balance)
+                {
+                    validBalance = true;
+                }
+            }
+        }
+    }
+
+    bank2.close();
+
+    cin.clear();
+    cin.ignore(10000, '\n');
+
+    return validBalance;
 }

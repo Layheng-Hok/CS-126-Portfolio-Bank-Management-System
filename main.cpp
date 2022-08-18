@@ -20,6 +20,7 @@
 #include <vector>
 #include <iterator>
 #include <iomanip>
+#include <ctime>
 
 using namespace std;
 
@@ -44,27 +45,31 @@ class a
 {
 protected:
     string fname, lname, name, DOB, gender, occupation;
-    unsigned int account, balance, deposit, age, birthDate, birthMonth, birthYear, pin;
+    int account, age, birthDate, birthMonth, birthYear, pin;
+    float balance, deposit;
     string month[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     int i = 0;
 
 public:
-    int age_conversion(int bd, int bm, int by);
+    int age_conversion(int bd, int bm, int by); // function to convert birthday into age
 
     // admin functions
     void Admin_Add_Account();
     void Admin_Delete_Account();
     void Admin_Edit_Account();
-    void Admin_Display_All_Account();
+    void Admin_Display_All_Accounts();
     void Admin_Search_Account();
 
     // customer functions
-    void View_Details();                               // function for a customer to display their own account details
-    void Make_Transaction();                           // function for a customer to transfer money to a different account
-    bool Account_Validation(unsigned int targetedAcc); // function to check if an account exists
-    bool Balance_Validation(long balance);             // function to check a user's balance before making a transaction
+    void Customer_View_Details();                                        // function for a customer to display their own account details
+    void Customer_Make_Transaction();                                    // function for a customer to transfer money to a different account
+    bool Customer_Account_Validation(int targetedAcc);                   // function to check if an account exists
+    bool Customer_Balance_Validation(int fromAcc, float amountTransfer); // function to check a user's balance before making a transaction
+    void Customer_PIN_Verification(int fromAcc);                         // function to check customer's PIN code before making a transaction
+    void Customer_Transaction_History();                                 // function for a customer to view their transaction history
 } obj;
 
+// function to convert birthday into age
 int a::age_conversion(int bd, int bm, int by)
 {
     int age;
@@ -807,7 +812,7 @@ void Admin_System()
                 break;
 
             case '4':
-                obj.Admin_Display_All_Account();
+                obj.Admin_Display_All_Accounts();
                 break;
 
             case '5':
@@ -851,13 +856,14 @@ void a::Admin_Add_Account()
     cout << "\n\t\t\t\t     Account Number(9-digits) : ";
     cin >> account;
     acc = to_string(account);
-    if (Account_Validation(account))
+
+    // check if the account number entered is positive integer
+    if (account < 0)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: This Account Number Is Already Existed. \n\n"
-                "\t\t\t\t   Please Try Another One.                                \n\n";
+        cout << "\t\t\t\t   Error Message: Account Number Must Be A 9-digits Positive Integer. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
@@ -870,13 +876,29 @@ void a::Admin_Add_Account()
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Must Contain Only Digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         system("pause");
         system("cls");
         Admin_Add_Account();
     }
+
+    // check if the account number already existed
+    if (Customer_Account_Validation(account))
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: This Account Number Is Already Existed. \n\n"
+                "\t\t\t\t   Please Try Another One.                                \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        Admin_Add_Account();
+    }
+
     // check if the account number entered is 9-digits
     if (acc.length() != 9)
     {
@@ -1054,6 +1076,20 @@ occupation:
 deposit:
     cout << "\n\t\t\t\t     Deposit($) : ";
     cin >> deposit;
+    // check if the deposit entered is positive integer
+    if (deposit < 0)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Deposit Must Be A Positive Integer. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        goto deposit;
+    }
+
     // check if the deposit entered is number
     if (cin.fail())
     {
@@ -1088,6 +1124,21 @@ pin:
     cout << "\n\t\t\t\t     Pin(4-digits) : ";
     cin >> pin;
     Pin = to_string(pin);
+
+    // check if the pin entered is positive integer
+    if (pin < 0)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Pin Must Be A 4-digits Positive Integer. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        goto pin;
+    }
+
     // check if the pin entered if all digits
     if (cin.fail())
     {
@@ -1148,7 +1199,7 @@ pin:
 void a::Admin_Delete_Account()
 {
     bool notFound = true;
-    unsigned int find;
+    int find;
     string Find;
     cout << "\t\t\t\t  =======================================================================================\n"
             "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
@@ -1159,6 +1210,22 @@ void a::Admin_Delete_Account()
     cout << "\t\t\t\t  Enter Account Number You Want To Delete : ";
     cin >> find;
     Find = to_string(find);
+
+    // check if the find entered is a negative number
+    if (find < 0)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9-Digits Positive Integer. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("pause");
+        system("cls");
+        Admin_Delete_Account();
+    }
 
     // check if the variable find entered is a number
     if (cin.fail())
@@ -1328,10 +1395,10 @@ void a::Admin_Delete_Account()
 void a::Admin_Edit_Account()
 {
     string newFname, newLname, newName, newDOB, newGender, newOccupation;
-    unsigned int newBalance, newBirthDate, newBirthMonth, newBirthYear, newPin;
+    int newBalance, newBirthDate, newBirthMonth, newBirthYear, newPin;
     bool notFound = true;
 
-    unsigned int find;
+    int find;
     string Find;
     cout << "\t\t\t\t  =======================================================================================\n"
             "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
@@ -1343,20 +1410,36 @@ void a::Admin_Edit_Account()
     cin >> find;
     Find = to_string(find);
 
-    // check if the variable find entered is a number
-    if (cin.fail())
+    // check if the variable find entered is positive integer
+    if (find < 0)
     {
         cout << endl;
         cout << "\t\t\t\t  =======================================================================================\n\n";
 
-        cout << "\t\t\t\t   Error Message: Must Contain 9-Digits. \n\n";
+        cout << "\t\t\t\t   Error Message: Account Number Must Be 9-digits Positive Integer. \n\n";
 
         cout << "\t\t\t\t  =======================================================================================\n\n";
         cin.clear();
         cin.ignore(10000, '\n');
         system("pause");
         system("cls");
-        Admin_Delete_Account();
+        Admin_Edit_Account();
+    }
+
+    // check if the variable find entered is a number
+    if (cin.fail())
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("pause");
+        system("cls");
+        Admin_Edit_Account();
     }
     // check if the variable find entered is 9-digits
     if (Find.length() != 9)
@@ -1371,7 +1454,7 @@ void a::Admin_Edit_Account()
         cin.ignore(10000, '\n');
         system("pause");
         system("cls");
-        Admin_Delete_Account();
+        Admin_Edit_Account();
     }
 
     ifstream bank2("Bank_Account.txt", ios::in);
@@ -1612,6 +1695,21 @@ void a::Admin_Edit_Account()
                 newBalance:
                     cout << "\n\t\t\t\t     Deposit($) : ";
                     cin >> newBalance;
+                    // check if the deposit entered is positive integer
+                    if (newBalance < 0)
+                    {
+                        cout << endl;
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+                        cout << "\t\t\t\t   Error Message: Pin Must Be A Positive Integer. \n\n";
+
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+                        system("pause");
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                        system("cls");
+                        goto newBalance;
+                    }
                     // check if the deposit entered is number
                     if (cin.fail())
                     {
@@ -1646,6 +1744,22 @@ void a::Admin_Edit_Account()
                     cout << "\n\t\t\t\t     Pin(4-digits) : ";
                     cin >> newPin;
                     Pin = to_string(newPin);
+                    // check if the pin entered is positive integer
+                    if (newPin < 0)
+                    {
+                        cout << endl;
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+                        cout << "\t\t\t\t   Error Message: Pin Must Be A 4-digits Positive Integer. \n\n";
+
+                        cout << "\t\t\t\t  =======================================================================================\n\n";
+                        system("pause");
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                        system("cls");
+                        goto newPin;
+                    }
+
                     // check if the pin entered if all digits
                     if (cin.fail())
                     {
@@ -1712,7 +1826,7 @@ void a::Admin_Edit_Account()
                     tempFile << balance << endl;
                     tempFile << pin << endl;
                     cout << endl;
-                    cout << "\t\t\t\t     Account Is Not Deleted.\n\n";
+                    cout << "\t\t\t\t     Account Is Not Edited.\n\n";
                     break;
                 }
 
@@ -1766,7 +1880,7 @@ void a::Admin_Edit_Account()
 }
 
 // function to allow to display all of customer account
-void a::Admin_Display_All_Account()
+void a::Admin_Display_All_Accounts()
 {
     string Account, Balance, BirthDate, BirthYear, Pin;
     i = 0;
@@ -1853,7 +1967,7 @@ void a::Admin_Display_All_Account()
 // function to allow to search account of a customer
 void a::Admin_Search_Account()
 {
-    unsigned targetedAcc;
+    int targetedAcc;
     bool notFound = true;
 
     cout << "\t\t\t\t  =======================================================================================\n"
@@ -2592,15 +2706,15 @@ void Customer_System()
             switch (choice)
             {
             case '1':
-                obj.View_Details();
+                obj.Customer_View_Details();
                 break;
 
             case '2':
-                obj.Make_Transaction();
+                obj.Customer_Make_Transaction();
                 break;
 
             case '3':
-
+                obj.Customer_Transaction_History();
                 break;
 
             case 'B':
@@ -2626,9 +2740,9 @@ void Customer_System()
 }
 
 // function for a customer to display their own account details
-void a::View_Details()
+void a::Customer_View_Details()
 {
-    unsigned targetedAcc;
+    int targetedAcc;
     bool notFound = true;
 
     cout << "\t\t\t\t  =======================================================================================\n"
@@ -2640,21 +2754,64 @@ void a::View_Details()
             "\n\t\t\t\t  Enter Your Account Number: ";
     cin >> targetedAcc;
 
-    ifstream bank2("Bank_Account.txt", ios::in);
-
-    while (!bank2.eof())
+    // check if the account number entered is positive integer
+    if (targetedAcc < 0)
     {
-        bank2 >> account;
-        bank2.ignore();
-        getline(bank2, name);
-        bank2 >> gender;
-        bank2 >> birthDate;
-        bank2 >> birthMonth;
-        bank2 >> birthYear;
-        bank2.ignore();
-        getline(bank2, occupation);
-        bank2 >> balance;
-        bank2 >> pin;
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Account Number Must Be A 9-digits Positive Integer. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        Admin_Add_Account();
+    }
+    // check if the account number entered is not digits
+    if (cin.fail())
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        Admin_Add_Account();
+    }
+
+    string acc = to_string(targetedAcc);
+
+    // check if the account number entered is 9-digits
+    if (acc.length() != 9)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9-digits. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        Admin_Add_Account();
+    }
+
+    ifstream bank1("Bank_Account.txt", ios::in);
+
+    while (!bank1.eof())
+    {
+        bank1 >> account;
+        bank1.ignore();
+        getline(bank1, name);
+        bank1 >> gender;
+        bank1 >> birthDate;
+        bank1 >> birthMonth;
+        bank1 >> birthYear;
+        bank1.ignore();
+        getline(bank1, occupation);
+        bank1 >> balance;
+        bank1 >> pin;
 
         if (targetedAcc == account)
         {
@@ -2688,7 +2845,7 @@ void a::View_Details()
         cout << "\t\t\t\t  =======================================================================================\n\n";
     }
 
-    bank2.close();
+    bank1.close();
 
     system("pause");
     cin.clear();
@@ -2697,17 +2854,20 @@ void a::View_Details()
 }
 
 // function for a customer to transfer money to a different account
-void a::Make_Transaction()
+void a::Customer_Make_Transaction()
 {
-    long fromAcc, toAcc, amountTransfer, amountUSER1, amountUSER2;
+    int fromAcc, toAcc;
+    float amountTransfer, fromAmount, toAmount;
+    string fromName, toName;
 
-    cout << "\t\t\t\t  =======================================================================================\n"
-            "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
-            "\t\t\t\t  =======================================================================================\n"
-            "\n"
-            "\t\t\t\t                            : :  L O G I N _ S Y S T E M  : :                            \n"
-            "\n"
-            "\t\t\t\t     Making A Transaction\n\n";
+    cout
+        << "\t\t\t\t  =======================================================================================\n"
+           "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
+           "\t\t\t\t  =======================================================================================\n"
+           "\n"
+           "\t\t\t\t                            : :  L O G I N _ S Y S T E M  : :                            \n"
+           "\n"
+           "\t\t\t\t     Making A Transaction\n\n";
     cout << "\t\t\t\t     Enter Your Account Number: ";
     cin >> fromAcc;
 
@@ -2724,10 +2884,10 @@ void a::Make_Transaction()
         cin.clear();
         cin.ignore(10000, '\n');
         system("cls");
-        Make_Transaction();
+        Customer_Make_Transaction();
     }
 
-    if (Account_Validation(fromAcc))
+    if (Customer_Account_Validation(fromAcc))
     {
     back1:
         cout << "\t\t\t\t     Transfer To (Account Number): ";
@@ -2744,13 +2904,14 @@ void a::Make_Transaction()
             system("pause");
             cin.clear();
             cin.ignore(10000, '\n');
+            system("cls");
             goto back1;
         }
 
-        if (Account_Validation(toAcc))
+        if (Customer_Account_Validation(toAcc))
         {
         back2:
-            cout << "\t\t\t\t     Enter The Transferred Amount ($): ";
+            cout << "\t\t\t\t     Enter The Amount You Want To Transfer ($): ";
             cin >> amountTransfer;
 
             if (cin.fail())
@@ -2767,6 +2928,253 @@ void a::Make_Transaction()
                 cin.ignore(10000, '\n');
                 system("cls");
                 goto back2;
+            }
+
+            if (Customer_Balance_Validation(fromAcc, amountTransfer))
+            {
+                ifstream bank2("Bank_Account.txt", ios::in);
+
+                if (bank2.is_open())
+                {
+                    bank2 >> account;
+                    bank2.ignore();
+                    getline(bank2, name);
+                    bank2 >> gender;
+                    bank2 >> birthDate;
+                    bank2 >> birthMonth;
+                    bank2 >> birthYear;
+                    bank2.ignore();
+                    getline(bank2, occupation);
+                    bank2 >> balance;
+                    bank2 >> pin;
+
+                    while (!bank2.eof())
+                    {
+                        if (fromAcc == account)
+                        {
+                            fromName = name;
+                        }
+
+                        if (toAcc == account)
+                        {
+                            toName = name;
+                        }
+
+                        bank2 >> account;
+                        bank2.ignore();
+                        getline(bank2, name);
+                        bank2 >> gender;
+                        bank2 >> birthDate;
+                        bank2 >> birthMonth;
+                        bank2 >> birthYear;
+                        bank2.ignore();
+                        getline(bank2, occupation);
+                        bank2 >> balance;
+                        bank2 >> pin;
+                    }
+                }
+
+                bank2.close();
+
+                do
+                {
+                    cout << "\n\t\t\t\t  Confirming Your Transaction:\n";
+                    cout << "\n\t\t\t\t  " << fromName << " (" << fromAcc << ") Is About To Transfer $" << amountTransfer << " To " << toName << " (" << toAcc << ").";
+                    cout << "\n\t\t\t\t  Enter 'Y' To Confirm, 'N' To Cancel Your Transaction.";
+                    cout << "\n\t\t\t\t  Your Selection: ";
+                    getline(cin, validation);
+                    system("cls");
+
+                    if (validation.length() == 1)
+                    {
+                        choice = validation[0];
+
+                        switch (choice)
+                        {
+                        case 'Y':
+                        case 'y':
+                            Customer_PIN_Verification(fromAcc);
+                            goto proceed;
+                            break;
+
+                        case 'N':
+                        case 'n':
+                            Customer_System();
+                            break;
+
+                        default:
+                            cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                            system("pause");
+                            system("cls");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                        system("pause");
+                        system("cls");
+                    }
+
+                } while (true);
+
+            proceed:
+
+                ifstream bank3("Bank_Account.txt", ios::in);
+                ofstream tempFile("temp.txt", ios::app);
+
+                if (bank3.is_open())
+                {
+                    bank3 >> account;
+                    bank3.ignore();
+                    getline(bank3, name);
+                    bank3 >> gender;
+                    bank3 >> birthDate;
+                    bank3 >> birthMonth;
+                    bank3 >> birthYear;
+                    bank3.ignore();
+                    getline(bank3, occupation);
+                    bank3 >> balance;
+                    bank3 >> pin;
+
+                    while (!bank3.eof())
+                    {
+                        if (fromAcc == account)
+                        {
+                            fromAmount = balance - amountTransfer;
+                            tempFile << account << endl;
+                            tempFile << name << endl;
+                            tempFile << gender << endl;
+                            tempFile << birthDate << endl;
+                            tempFile << birthMonth << endl;
+                            tempFile << birthYear << endl;
+                            tempFile << occupation << endl;
+                            tempFile << fromAmount << endl;
+                            tempFile << pin << endl;
+                        }
+
+                        if (toAcc == account)
+                        {
+                            toAmount = balance + amountTransfer;
+                            tempFile << account << endl;
+                            tempFile << name << endl;
+                            tempFile << gender << endl;
+                            tempFile << birthDate << endl;
+                            tempFile << birthMonth << endl;
+                            tempFile << birthYear << endl;
+                            tempFile << occupation << endl;
+                            tempFile << toAmount << endl;
+                            tempFile << pin << endl;
+                        }
+
+                        if (toAcc != account && fromAcc != account)
+                        {
+                            tempFile << account << endl;
+                            tempFile << name << endl;
+                            tempFile << gender << endl;
+                            tempFile << birthDate << endl;
+                            tempFile << birthMonth << endl;
+                            tempFile << birthYear << endl;
+                            tempFile << occupation << endl;
+                            tempFile << balance << endl;
+                            tempFile << pin << endl;
+                        }
+
+                        bank3 >> account;
+                        bank3.ignore();
+                        getline(bank3, name);
+                        bank3 >> gender;
+                        bank3 >> birthDate;
+                        bank3 >> birthMonth;
+                        bank3 >> birthYear;
+                        bank3.ignore();
+                        getline(bank3, occupation);
+                        bank3 >> balance;
+                        bank3 >> pin;
+                    }
+                }
+
+                tempFile.close();
+                bank3.close();
+
+                remove("Bank_Account.txt");
+                rename("temp.txt", "Bank_Account.txt");
+
+                // current date/time based on current system
+                time_t now = time(0);
+
+                // convert now to string form
+                char *dt = ctime(&now);
+
+                ofstream transactionFile("Transaction.txt", ios::app);
+                transactionFile << fromAcc << endl;
+                transactionFile << fromName << endl;
+                transactionFile << toAcc << endl;
+                transactionFile << toName << endl;
+                transactionFile << amountTransfer << endl;
+                transactionFile << dt;
+                transactionFile.close();
+
+                cout << endl;
+                cout << "\t\t\t\t  =======================================================================================\n\n";
+
+                cout << "\t\t\t\t   Transaction Is Completed. \n\n";
+
+                cout << "\t\t\t\t  =======================================================================================\n\n";
+                system("pause");
+                cin.clear();
+                cin.ignore(10000, '\n');
+                system("cls");
+            }
+
+            else
+            {
+                cout << endl;
+                cout << "\t\t\t\t  =======================================================================================\n\n";
+
+                cout << "\t\t\t\t   You Do Not Have Enough Balance To Make This Transaction. \n\n";
+                cout << "\t\t\t\t   Please Reenter The Amount. \n\n";
+
+                cout << "\t\t\t\t  =======================================================================================\n\n";
+
+                do
+                {
+                    cout << "\n\t\t\t\t  Enter 'Y' To Try Again, 'N' To Go Back To Customer Menu.";
+                    cout << "\n\t\t\t\t  Your Selection: ";
+                    getline(cin, validation);
+                    system("cls");
+
+                    if (validation.length() == 1)
+                    {
+                        choice = validation[0];
+
+                        switch (choice)
+                        {
+                        case 'Y':
+                        case 'y':
+                            goto back2;
+                            break;
+
+                        case 'N':
+                        case 'n':
+                            Customer_System();
+                            break;
+
+                        default:
+                            cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                            system("pause");
+                            system("cls");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                        system("pause");
+                        system("cls");
+                    }
+
+                } while (true);
             }
         }
         else
@@ -2799,7 +3207,7 @@ void a::Make_Transaction()
 
                     case 'N':
                     case 'n':
-                        Customer_Login_Menu();
+                        Customer_System();
                         break;
 
                     default:
@@ -2844,12 +3252,12 @@ void a::Make_Transaction()
                 {
                 case 'Y':
                 case 'y':
-                    Make_Transaction();
+                    Customer_Make_Transaction();
                     break;
 
                 case 'N':
                 case 'n':
-                    Customer_Login_Menu();
+                    Customer_System();
                     break;
 
                 default:
@@ -2871,7 +3279,7 @@ void a::Make_Transaction()
 }
 
 // function to check if an account exists
-bool a::Account_Validation(unsigned int targetedAcc)
+bool a::Customer_Account_Validation(int targetedAcc)
 {
     bool found = false;
 
@@ -2909,7 +3317,336 @@ bool a::Account_Validation(unsigned int targetedAcc)
 }
 
 // function to check a user's balance before making a transaction
-bool Balance_Validation(long balance)
+bool a::Customer_Balance_Validation(int fromAcc, float amountTransfer)
 {
-    return 0;
+    bool validBalance = false;
+
+    ifstream bank2("Bank_Account.txt", ios::in);
+
+    if (bank2.is_open())
+    {
+        while (!bank2.eof())
+        {
+            bank2 >> account;
+            bank2.ignore();
+            getline(bank2, name);
+            bank2 >> gender;
+            bank2 >> birthDate;
+            bank2 >> birthMonth;
+            bank2 >> birthYear;
+            bank2.ignore();
+            getline(bank2, occupation);
+            bank2 >> balance;
+            bank2 >> pin;
+
+            if (fromAcc == account)
+            {
+                if (amountTransfer <= balance)
+                {
+                    validBalance = true;
+                }
+            }
+        }
+    }
+
+    bank2.close();
+
+    cin.clear();
+    cin.ignore(10000, '\n');
+
+    return validBalance;
+}
+
+// function to check customer's PIN code before making a transaction
+void a::Customer_PIN_Verification(int fromAcc)
+{
+    int existedPIN, inputPIN;
+    int i = 0;
+
+pin:
+    cout << "\n\t\t\t\t  Please Enter Your PIN Code: ";
+    cin >> inputPIN;
+
+    // check if the pin entered is positive integer
+    if (inputPIN < 0)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Pin Must Be A 4-digits Positive Integer. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        goto pin;
+    }
+
+    // check if the pin entered if all digits
+    if (cin.fail())
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("cls");
+        goto pin;
+    }
+
+    string Pin = to_string(inputPIN);
+
+    // check if the pin entered is a 4-digits number
+    if (Pin.length() != 4)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Pin Must Contain 4-digits. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("cls");
+        goto pin;
+    }
+
+    ifstream bank2("Bank_Account.txt", ios::in);
+
+    if (bank2.is_open())
+    {
+        bank2 >> account;
+        bank2.ignore();
+        getline(bank2, name);
+        bank2 >> gender;
+        bank2 >> birthDate;
+        bank2 >> birthMonth;
+        bank2 >> birthYear;
+        bank2.ignore();
+        getline(bank2, occupation);
+        bank2 >> balance;
+        bank2 >> pin;
+
+        while (!bank2.eof())
+        {
+            if (fromAcc == account)
+            {
+                existedPIN = pin;
+            }
+
+            bank2 >> account;
+            bank2.ignore();
+            getline(bank2, name);
+            bank2 >> gender;
+            bank2 >> birthDate;
+            bank2 >> birthMonth;
+            bank2 >> birthYear;
+            bank2.ignore();
+            getline(bank2, occupation);
+            bank2 >> balance;
+            bank2 >> pin;
+        }
+    }
+
+    bank2.close();
+
+    if (inputPIN != existedPIN)
+    {
+        i++;
+        cout << i << endl;
+        if (i == 3)
+        {
+            cout << endl;
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+
+            cout << "\t\t\t\t   Error Message: Your Transaction Failed. \n\n";
+
+            cout << "\t\t\t\t  =======================================================================================\n\n";
+            system("pause");
+            fflush(stdin);
+            system("cls");
+            Customer_System();
+        }
+
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Your Pin Code Is Incorrect. \n";
+        cout << "\t\t\t\t   Please Try Again. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        system("pause");
+        cin.clear();
+        cin.ignore(10000, '\n');
+        system("cls");
+
+        do
+        {
+            cout << "\n\t\t\t\t  Enter 'Y' To Try Again, 'N' To Go Back To Customer Menu.";
+            cout << "\n\t\t\t\t  Your Selection: ";
+            getline(cin, validation);
+            system("cls");
+
+            if (validation.length() == 1)
+            {
+                choice = validation[0];
+
+                switch (choice)
+                {
+                case 'Y':
+                case 'y':
+                    goto pin;
+                    break;
+
+                case 'N':
+                case 'n':
+                    Customer_System();
+                    break;
+
+                default:
+                    cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+            }
+            else
+            {
+                cout << "\nError Message: Please Enter One Of The Available Options.\n\n";
+                system("pause");
+                system("cls");
+            }
+
+        } while (true);
+    }
+}
+
+// function for a customer to view their transaction history
+void a::Customer_Transaction_History()
+{
+    int targetedAcc;
+    bool notFound = true;
+    int accTransferred, accReceived;
+    string fromAcc, fromName, toAcc, toName, amountTransfer, date;
+
+    cout << "\t\t\t\t  =======================================================================================\n"
+            "\t\t\t\t  ||                    B A N K _ M A N A G E M E N T _ S Y S T E M                    ||\n"
+            "\t\t\t\t  =======================================================================================\n"
+            "\n"
+            "\t\t\t\t                          : :  C U S T O M E R _ S Y S T E M   : :                       \n"
+            "\n"
+            "\n\t\t\t\t  Enter Your Account Number: ";
+    cin >> targetedAcc;
+
+    // check if the account number entered is positive integer
+    if (targetedAcc < 0)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Account Number Must Be A 9-digits Positive Integer. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        Customer_Transaction_History();
+    }
+    // check if the account number entered is not digits
+    if (cin.fail())
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Invalid Input. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        Customer_Transaction_History();
+    }
+
+    string acc = to_string(targetedAcc);
+
+    // check if the account number entered is 9-digits
+    if (acc.length() != 9)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   Error Message: Account Number Must Contain 9-digits. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+        system("pause");
+        system("cls");
+        Customer_Transaction_History();
+    }
+
+    ifstream bank1("Transaction.txt", ios::in);
+
+    bank1 >> accTransferred;
+    bank1.ignore();
+    getline(bank1, fromName);
+    bank1 >> accReceived;
+    bank1.ignore();
+    getline(bank1, toName);
+    bank1.ignore();
+    getline(bank1, amountTransfer);
+    bank1.ignore();
+    getline(bank1, date);
+
+    fromAcc = to_string(accTransferred);
+    toAcc = to_string(accReceived);
+
+    cout << setw(90) << right << "+  Your Transaction History  +" << setw(75) << endl
+         << endl;
+    cout << setw(168) << setfill('-') << "" << endl;
+    cout << "|" << setw(5) << setfill(' ') << "No." << setw(3) << setfill(' ');
+    cout << "|" << setw(33) << setfill(' ') << "Account Transferred" << setw(14);
+    cout << "|" << setw(33) << setfill(' ') << "Account Received" << setw(17);
+    cout << "|" << setw(28) << setfill(' ') << "Date & Time" << setw(17);
+    cout << "|" << setw(13) << setfill(' ') << "Amount" << setw(7) << "|" << endl;
+
+    while (!bank1.eof())
+    {
+
+        if (targetedAcc == accTransferred || targetedAcc == accReceived)
+        {
+            notFound = false;
+        }
+
+        bank1 >> accTransferred;
+        bank1.ignore();
+        getline(bank1, fromName);
+        bank1 >> accReceived;
+        bank1.ignore();
+        getline(bank1, toName);
+        bank1.ignore();
+        getline(bank1, amountTransfer);
+        bank1.ignore();
+        getline(bank1, date);
+    }
+
+    if (notFound)
+    {
+        cout << endl;
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+
+        cout << "\t\t\t\t   No Record Found. \n\n";
+
+        cout << "\t\t\t\t  =======================================================================================\n\n";
+    }
+
+    bank1.close();
+
+    cout << endl
+         << endl;
+    system("pause");
+    cin.clear();
+    cin.ignore(10000, '\n');
+    Customer_System();
 }

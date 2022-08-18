@@ -1,27 +1,36 @@
-123456789
+12
 Lyyou Heng
 F
 2
 2
 2005
 Data Scientist
-100
+2150
 2607
-111111111
+13
 Layheng Hok
 M
 12
 4
 2003
 Senior Software Engineer
-100
+240
 2607
-111111112
+14
 L Lawliet
 M
 11
 12
 1999
 Detector
-1000
+10
 2699
+15
+Hatake Kakashi
+M
+30
+12
+1977
+Ninja
+2500
+5252
