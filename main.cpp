@@ -3634,7 +3634,7 @@ void a::Customer_Transaction_History()
     getline(bank1, date);
 
     cout << endl;
-    cout << setw(90) << right << "+  Your Transaction History  +" << setw(75) << endl
+    cout << setw(95) << right << "+  Your Transaction History  +" << setw(80) << endl
          << endl;
     cout << setw(171) << setfill('-') << "" << endl;
     cout << "|" << setw(5) << setfill(' ') << "No." << setw(3) << setfill(' ');
